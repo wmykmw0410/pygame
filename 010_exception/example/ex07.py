@@ -1,0 +1,3 @@
+"""Exceptionクラス"""
+
+raise Exception("エラーメッセージ")
