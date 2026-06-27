@@ -5,7 +5,7 @@
 # 目次
 - [クラスとは](#クラスとは)
 - [クラスの定義](#クラスの定義)
-  - [クラス変数とインスタンス変数](#クラス変数とインスタンス変数)
+  - [属性の種類: インスタンス変数とクラス変数](#属性の種類-インスタンス変数とクラス変数)
 - [インスタンスの生成と利用](#インスタンスの生成と利用)
 - [複数のインスタンス](#複数のインスタンス)
 - [継承](#継承)
@@ -58,7 +58,7 @@ p1.take_damage(30)  # p1 だけ HP が減る
 ```python
 class クラス名():
     def __init__(self, 引数):
-        self.プロパティ名 = 初期値
+        self.属性名 = 初期値
 
     def メソッド名(self):
         処理
@@ -69,7 +69,7 @@ class クラス名():
 | `class` | クラスの定義を開始する |
 | `__init__` | インスタンスが作られるときに自動で呼ばれる（初期化処理） |
 | `self` | そのインスタンス自身を指す。メソッドの第1引数に必ず書く |
-| `self.プロパティ` | インスタンスごとに独立したデータを保持する |
+| `self.属性名` | インスタンスごとに独立したデータを保持する（インスタンス変数） |
 
 サンプル: [example/ex01.py](example/ex01.py)
 
@@ -91,9 +91,9 @@ class Player():
 
 </details>
 
-## クラス変数とインスタンス変数
+## 属性の種類: インスタンス変数とクラス変数
 
-クラスの中で定義できる変数は2種類ある。
+クラスが持つ**属性**には2種類ある。
 
 | 種類 | 書く場所 | 特徴 |
 | --- | --- | --- |
@@ -133,7 +133,7 @@ p1.party_count     = 0    # ❌ p1 専用のインスタンス変数が新たに
 # 生成: クラス名() でインスタンスを作る
 player = Player("勇者", 100)
 
-# プロパティへのアクセス
+# 属性へのアクセス
 print(player.name)   # 勇者
 print(player.hp)     # 100
 
@@ -149,7 +149,7 @@ player.show_status()  # 勇者 HP: 50
 
 `Counter` クラスを作ろう。
 
-- プロパティ: `count = 0`
+- 属性（インスタンス変数）: `count = 0`
 - `increment()` → count を 1 増やす
 - `decrement()` → count を 1 減らす（0 未満にはならない）
 - `reset()` → count を 0 に戻す
@@ -164,7 +164,7 @@ player.show_status()  # 勇者 HP: 50
 4. reset() を呼んで show() → 0 が表示される
 ```
 
-解答: [answer/Q1_answer/Q1_ans.py](answer/Q1_answer/Q1_ans.py)
+解答: [answer/Q1_ans.py](answer/Q1_ans.py)
 
 ---
 
@@ -201,7 +201,7 @@ for p in party:
 
 `Character` クラスを作って、2体のキャラクターを戦わせよう。
 
-- プロパティ: `name`, `hp = 100`, `attack_power`
+- 属性（インスタンス変数）: `name`, `hp = 100`, `attack_power`
 - `attack(target)` → `target.hp` を `attack_power` 分減らし、結果を表示する
 - `is_alive()` → `hp > 0` なら `True` を返す
 
@@ -213,7 +213,7 @@ for p in party:
 4. 倒したほうを表示する
 ```
 
-解答: [answer/Q2_answer/Q2_ans.py](answer/Q2_answer/Q2_ans.py)
+解答: [answer/Q2_ans.py](answer/Q2_ans.py)
 
 ---
 
@@ -245,13 +245,13 @@ class Cat(Animal):
         print(f"{self.name}: ニャー！")
 ```
 
-子クラス独自のプロパティを追加したい場合は `super().__init__()` で親の初期化を呼ぶ。
+子クラス独自の属性を追加したい場合は `super().__init__()` で親の初期化を呼ぶ。
 
 ```python
 class Dog(Animal):
     def __init__(self, name, breed):
         super().__init__(name)    # 親の __init__ を先に呼ぶ
-        self.breed = breed        # Dog だけが持つプロパティ
+        self.breed = breed        # Dog だけが持つ属性（インスタンス変数）
 ```
 
 種類が違っても同じメソッド名で呼び出せる。
@@ -285,7 +285,7 @@ step3. 以下で戦わせる
 > 次の `016_BreakoutClone_class_ver` `017_shooting_game_class_ver` では、既存ゲームを段階的にクラス化する練習をする。  
 > `019_frog_blaster` では、クラスの考え方を活かしてゼロからゲームを設計する。
 
-解答: [answer/Q3_answer/Q3_ans.py](answer/Q3_answer/Q3_ans.py)
+解答: [answer/Q3_ans.py](answer/Q3_ans.py)
 
 ---
 

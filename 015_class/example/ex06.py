@@ -4,12 +4,13 @@
 import pygame as pg
 import sys
 import random
+from pathlib import Path
 
 pg.init()
 screen = pg.display.set_mode((600, 400))
 pg.display.set_caption("ex06: Enemy クラスを追加")
 clock  = pg.time.Clock()
-FONT   = "/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc"
+FONT   = Path(__file__).resolve().parent.parent / "fonts" / "NotoSansCJKjp-Regular.otf"
 font   = pg.font.Font(FONT, 24)
 font_s = pg.font.Font(FONT, 20)
 WHITE  = pg.Color("WHITE")
