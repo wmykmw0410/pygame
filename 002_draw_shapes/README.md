@@ -139,26 +139,4 @@ clock.tick(60)
 
 ## 四角を斜めに移動させて、その後拡大させる
 
-```text
-・四角を画面に表示する
-・3秒間、斜め方向に移動させる
-・3秒後、移動を止めて四角を拡大させ続ける
-```
-
-<details>
-<summary>ヒント</summary>
-
-- 経過時間は `pg.time.get_ticks()` で取得できる(単位: ミリ秒)
-- 3秒 = 3000ミリ秒
-- 斜め移動は `rect.x` と `rect.y` を同時に変化させる
-- 拡大は `rect.width` と `rect.height` を増やす
-- Rectの大きさを変えても基準点(左上)は変わらない
-
-</details>
-
-<details>
-<summary>答え</summary>
-
-[answer/pr01.py](answer/pr01.py)
-
-</details>
+> 問題: [question/question1.py](question/question1.py) / 解答: [question/answer/answer1.py](question/answer/answer1.py)
