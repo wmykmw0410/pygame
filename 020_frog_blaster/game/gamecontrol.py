@@ -103,8 +103,17 @@ class GameManager(Subject):
                     sound.SoundManager.get_instance().bgmstop()
                     sound.SoundManager.get_instance().playover()
 
-        self.enemies = [e for e in self.enemies if e not in dead_enemies]
-        self.bullets = [b for b in self.bullets if b not in dead_bullets and b.is_alive]
+        alive_enemies = []
+        for e in self.enemies:
+            if e not in dead_enemies:
+                alive_enemies.append(e)
+        self.enemies = alive_enemies
+
+        alive_bullets = []
+        for b in self.bullets:
+            if b not in dead_bullets and b.is_alive:
+                alive_bullets.append(b)
+        self.bullets = alive_bullets
 
     def draw(self, screen):
         for b in self.bullets:
