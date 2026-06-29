@@ -24,11 +24,17 @@ class Tetrimino:
 
     def rotate_right(self) -> None:
         """時計回りに90度回転する。"""
-        self.shape = [list(row) for row in zip(*self.shape[::-1])]
+        rotated = []
+        for row in zip(*self.shape[::-1]):
+            rotated.append(list(row))
+        self.shape = rotated
 
     def rotate_left(self) -> None:
         """反時計回りに90度回転する。"""
-        self.shape = [list(row) for row in zip(*self.shape)][::-1]
+        rotated = []
+        for row in zip(*self.shape):
+            rotated.append(list(row))
+        self.shape = rotated[::-1]
 
     def move(self, dx: int, dy: int) -> None:
         """ピースを (dx, dy) だけ移動する。

@@ -14,7 +14,12 @@ class TetrisGame:
     """ゲーム状態・ロジック・入力処理を管理する。"""
 
     def __init__(self) -> None:
-        self.grid: Grid = [[0 for _ in range(COLS)] for _ in range(ROWS)]
+        self.grid: Grid = []
+        for _ in range(ROWS):
+            row = []
+            for _ in range(COLS):
+                row.append(0)
+            self.grid.append(row)
         self.current_piece: Tetrimino = self._spawn_piece()
         self.total_lines: int = 0
 
@@ -27,8 +32,11 @@ class TetrisGame:
     def _spawn_piece(self) -> Tetrimino:
         """ランダムなテトリミノを生成してスポーン位置に配置する。"""
         mino_data = random.choice(list(TETORIMINO_SHAPES.values()))
+        shape_copy = []
+        for row in mino_data["shape"]:
+            shape_copy.append(row[:])
         piece = Tetrimino(
-            shape=[row[:] for row in mino_data["shape"]],
+            shape=shape_copy,
             color=mino_data["color"],
             x=0,
             y=0
@@ -38,10 +46,24 @@ class TetrisGame:
 
     def _clear_lines(self) -> None:
         """揃った行を消去し、スコアと落下速度を更新する。"""
-        new_grid = [row for row in self.grid if any(cell == 0 for cell in row)]
+        new_grid = []
+        for row in self.grid:
+            has_empty = False
+            for cell in row:
+                if cell == 0:
+                    has_empty = True
+                    break
+            if has_empty:
+                new_grid.append(row)
         cleared = ROWS - len(new_grid)
 
-        self.grid = [[0 for _ in range(COLS)] for _ in range(cleared)] + new_grid
+        empty_rows = []
+        for _ in range(cleared):
+            row = []
+            for _ in range(COLS):
+                row.append(0)
+            empty_rows.append(row)
+        self.grid = empty_rows + new_grid
         self.total_lines += cleared
         self.fall_interval = max(
             self.min_interval,
@@ -87,13 +109,17 @@ class TetrisGame:
                 piece.move(0, 1)
 
         elif event.key == pg.K_a:
-            original_shape = [row[:] for row in piece.shape]
+            original_shape = []
+            for row in piece.shape:
+                original_shape.append(row[:])
             piece.rotate_left()
             if not piece.can_move(0, 0, self.grid, ROWS, COLS):
                 piece.shape = original_shape
 
         elif event.key == pg.K_s:
-            original_shape = [row[:] for row in piece.shape]
+            original_shape = []
+            for row in piece.shape:
+                original_shape.append(row[:])
             piece.rotate_right()
             if not piece.can_move(0, 0, self.grid, ROWS, COLS):
                 piece.shape = original_shape

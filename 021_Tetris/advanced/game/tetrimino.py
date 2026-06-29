@@ -7,10 +7,16 @@ class Tetrimino:
         self.kind  = kind   # "I" / "O" / "T" など（ホールド復元に使用）
 
     def rotate_right(self):
-        self.shape = [list(row) for row in zip(*self.shape[::-1])]
+        rotated = []
+        for row in zip(*self.shape[::-1]):
+            rotated.append(list(row))
+        self.shape = rotated
 
     def rotate_left(self):
-        self.shape = [list(row) for row in zip(*self.shape)][::-1]
+        rotated = []
+        for row in zip(*self.shape):
+            rotated.append(list(row))
+        self.shape = rotated[::-1]
 
     def move(self, dx, dy):
         self.x += dx

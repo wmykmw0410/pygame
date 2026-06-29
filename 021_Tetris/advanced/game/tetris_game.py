@@ -31,8 +31,11 @@ class TetrisGame:
     def _spawn_piece(self):
         kind = random.choice(list(TETORIMINO_SHAPES.keys()))
         data = TETORIMINO_SHAPES[kind]
+        shape_copy = []
+        for row in data["shape"]:
+            shape_copy.append(row[:])
         piece = Tetrimino(
-            shape=[row[:] for row in data["shape"]],
+            shape=shape_copy,
             color=data["color"],
             x=0,
             y=0,
@@ -48,8 +51,11 @@ class TetrisGame:
 
     def _make_piece(self, kind):
         data  = TETORIMINO_SHAPES[kind]
+        shape_copy = []
+        for row in data["shape"]:
+            shape_copy.append(row[:])
         piece = Tetrimino(
-            shape=[row[:] for row in data["shape"]],
+            shape=shape_copy,
             color=data["color"],
             x=0,
             y=0,
@@ -137,13 +143,17 @@ class TetrisGame:
                 piece.move(0, 1)
 
         elif event.key == pg.K_a:
-            original_shape = [row[:] for row in piece.shape]
+            original_shape = []
+            for row in piece.shape:
+                original_shape.append(row[:])
             piece.rotate_left()
             if not piece.can_move(0, 0, self.grid, ROWS, COLS):
                 piece.shape = original_shape
 
         elif event.key == pg.K_s:
-            original_shape = [row[:] for row in piece.shape]
+            original_shape = []
+            for row in piece.shape:
+                original_shape.append(row[:])
             piece.rotate_right()
             if not piece.can_move(0, 0, self.grid, ROWS, COLS):
                 piece.shape = original_shape
