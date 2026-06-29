@@ -77,29 +77,31 @@
   - [ ] ex05
   - [ ] ex06
   - [ ] ex07
-- [ ] 016_BreakoutClone_class_ver — クラス化練習（ブロック崩し）
+- [ ] 016_battle_game — バトルゲーム（段階的実装）
+  - [ ] Q1
+- [ ] 017_BreakoutClone_class_ver — クラス化練習（ブロック崩し）
   - [ ] ex01
   - [ ] ex02
   - [ ] ex03
   - [ ] ex04
   - [ ] ex05
-- [ ] 017_shooting_game_class_ver — クラス化練習（シューティング）
+- [ ] 018_shooting_game_class_ver — クラス化練習（シューティング）
   - [ ] ex01
   - [ ] ex02
   - [ ] ex03
   - [ ] ex04
   - [ ] ex05
-- [ ] 018_module — モジュール・パッケージ
+- [ ] 019_module — モジュール・パッケージ
   - [ ] Q1
   - [ ] Q2
   - [ ] Q3
   - [ ] Q4
-- [ ] 019_frog_blaster — オブジェクト指向（ゲーム設計）
+- [ ] 020_frog_blaster — オブジェクト指向（ゲーム設計）
   - [ ] Q1
   - [ ] Q2
 
 ### 発展
-- [ ] 020_Tetris — テトリス
+- [ ] 021_Tetris — テトリス
 
 ---
 
@@ -141,16 +143,17 @@
 | フォルダ | テーマ | 概要 | リンク |
 | --- | --- | --- | --- |
 | 015_class | OOP 基礎 | クラス・インスタンス・メソッド・継承 | [README](015_class/README.md) |
-| 016_BreakoutClone_class_ver | OOP 練習① | ブロック崩しを関数ベース→クラスへ段階的に書き直す | [README](016_BreakoutClone_class_ver/README.md) |
-| 017_shooting_game_class_ver | OOP 練習② | シューティングゲームを段階的にクラス化する | [README](017_shooting_game_class_ver/README.md) |
-| 018_module | モジュール | モジュール・パッケージ・標準ライブラリ・相対インポート | [README](018_module/README.md) |
-| 019_frog_blaster | OOP ゲーム | クラスを活用したゲーム設計・実装 | [README](019_frog_blaster/README.md) |
+| 016_battle_game | OOP 実践 | バトルゲームを関数版→クラス版へ段階的に実装する | [README](016_battle_game/README.md) |
+| 017_BreakoutClone_class_ver | OOP 練習① | ブロック崩しを関数ベース→クラスへ段階的に書き直す | [README](017_BreakoutClone_class_ver/README.md) |
+| 018_shooting_game_class_ver | OOP 練習② | シューティングゲームを段階的にクラス化する | [README](018_shooting_game_class_ver/README.md) |
+| 019_module | モジュール | モジュール・パッケージ・標準ライブラリ・相対インポート | [README](019_module/README.md) |
+| 020_frog_blaster | OOP ゲーム | クラスを活用したゲーム設計・実装 | [README](020_frog_blaster/README.md) |
 
 ### 発展
 
 | フォルダ | テーマ | 概要 | リンク |
 | --- | --- | --- | --- |
-| 020_Tetris | テトリス | ゼロからテトリスを段階的に実装するハンズオン | [README](020_Tetris/README.md) |
+| 021_Tetris | テトリス | ゼロからテトリスを段階的に実装するハンズオン | [README](021_Tetris/README.md) |
 
 ### 補足
 
