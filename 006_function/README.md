@@ -100,13 +100,13 @@ func_name(arg1, arg2, ...)
 
 > サンプル: [example/ex02.py](example/ex02.py)
 
-> 練習: デフォルト引数 → [problem/pr01.py](problem/pr01.py) / 解答: [answer/pr01_ans.py](answer/pr01_ans.py)
+> 問題: デフォルト引数 → [question/question1.py](question/question1.py) / 解答: [question/answer/answer1.py](question/answer/answer1.py)
 
-> 練習: 位置引数・キーワード引数 → [problem/pr02.py](problem/pr02.py) / 解答: [answer/pr02_ans.py](answer/pr02_ans.py)
+> 問題: 位置引数・キーワード引数 → [question/question2.py](question/question2.py) / 解答: [question/answer/answer2.py](question/answer/answer2.py)
 
-> 練習: 可変長位置引数(`*args`) → [problem/pr03.py](problem/pr03.py) / 解答: [answer/pr03_ans.py](answer/pr03_ans.py)
+> 問題: 可変長位置引数(`*args`) → [question/question3.py](question/question3.py) / 解答: [question/answer/answer3.py](question/answer/answer3.py)
 
-> 練習: 可変長キーワード引数(`**kwargs`) → [problem/pr04.py](problem/pr04.py) / 解答: [answer/pr04_ans.py](answer/pr04_ans.py)
+> 問題: 可変長キーワード引数(`**kwargs`) → [question/question4.py](question/question4.py) / 解答: [question/answer/answer4.py](question/answer/answer4.py)
 
 ## 戻り値の詳細
 
