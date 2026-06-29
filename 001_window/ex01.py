@@ -6,7 +6,6 @@ import sys
 pg.init()
 screen = pg.display.set_mode((800,600))
 pg.display.set_caption("四角を描くプログラム")
-# clock.tick(fps): デフォルト値=0(制限なし), 範囲=0以上の整数(推奨: 30〜60)
 clock = pg.time.Clock()
 
 # この下をずっとループする
