@@ -161,5 +161,7 @@
 
 | フォルダ | 内容 |
 | --- | --- |
+| [python_basics.md](python_basics.md) | Python 基本文法リファレンス |
 | [002_draw_shapes/color_code.md](002_draw_shapes/color_code.md) | カラーコード一覧（色名・RGB・RGBA） |
+| [005_event_process/keycode.md](005_event_process/keycode.md) | キーコード一覧（定数・数値） |
 | 00_assets | 共通の画像・サウンド素材 |
