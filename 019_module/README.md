@@ -114,15 +114,11 @@ print(now.hour, now.minute, now.second)
 
 ## Q1. ジャンケンゲーム
 
-`random` と `time` モジュールを使って、カウントダウン後にランダムな手を表示するジャンケンゲームを作る
-
-解答: [answer/Q1_answer/Q1_ans.py](answer/Q1_answer/Q1_ans.py)
+> 問題: [question/question1.py](question/question1.py) / 解答: [question/answer/answer1.py](question/answer/answer1.py)
 
 ## Q2. 誕生日計算
 
-`datetime` モジュールを使って、指定した誕生日から今日まで何日経過したか計算する
-
-解答: [answer/Q2_answer/Q2_ans.py](answer/Q2_answer/Q2_ans.py)
+> 問題: [question/question2.py](question/question2.py) / 解答: [question/answer/answer2.py](question/answer/answer2.py)
 
 ---
 
@@ -234,20 +230,7 @@ for score in scorelist:
 
 ## Q3. 単位変換モジュール
 
-単位変換関数をまとめた `converter.py` モジュールを作成し、3パターンのインポート方法で呼び出す
-
-```
-step1. converter.py に以下の関数を作る
-         cm_to_inch(cm)            → cm をインチに変換
-         kg_to_lb(kg)              → kg をポンドに変換
-         celsius_to_fahrenheit(c)  → 摂氏を華氏に変換
-
-step2. import converter で呼び出す（use_step2.py）
-step3. import converter as cv で別名呼び出し（use_step3.py）
-step4. from converter import ... で直接インポート（use_step4.py）
-```
-
-解答: [answer/Q3_answer/](answer/Q3_answer/)
+> 問題: [question/question3.py](question/question3.py) / 解答: [question/answer/answer3/](question/answer/answer3/)
 
 ---
 
@@ -347,28 +330,7 @@ sub(2, 1)
 
 ## Q4. 図形パッケージ
 
-`circle.py` と `rectangle.py` を `shapes` パッケージにまとめ、2パターンの呼び出し方を確認する
-
-```
-step1. shapes/ フォルダを作り __init__.py を作成する
-
-step2. circle.py に以下の関数を作る
-         area(r)       → 円の面積（math.pi * r ** 2）
-         perimeter(r)  → 円の周長（2 * math.pi * r）
-
-step3. rectangle.py に以下の関数を作る
-         area(w, h)       → 長方形の面積
-         perimeter(w, h)  → 長方形の周長
-
-step4. __init__.py に全関数をエクスポートする
-         circle_area / circle_perimeter / rectangle_area / rectangle_perimeter
-
-step5. 2パターンで呼び出す
-         use_module.py → from shapes import circle を使う
-         use_init.py   → from shapes import circle_area を使う（__init__.py 経由）
-```
-
-解答: [answer/Q4_answer/](answer/Q4_answer/)
+> 問題: [question/question4.py](question/question4.py) / 解答: [question/answer/answer4/](question/answer/answer4/)
 
 ---
 
