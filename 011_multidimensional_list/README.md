@@ -82,7 +82,7 @@ print(len(fruits))  # 出力: 3 (要素数)
 
 サンプル: [example/ex01.py](example/ex01.py)
 
-> 練習: [problem/pr01.py](problem/pr01.py) / 解答: [problem/answer/pr01_ans.py](problem/answer/pr01_ans.py)
+> 問題: [question/question1.py](question/question1.py) / 解答: [question/answer/answer1.py](question/answer/answer1.py)
 
 ## 要素へのアクセス
 
@@ -106,7 +106,7 @@ print(fruits[-2])  # 出力: banana (末尾から2番目)
 
 サンプル: [example/ex02.py](example/ex02.py)
 
-> 練習: [problem/pr02.py](problem/pr02.py) / 解答: [problem/answer/pr02_ans.py](problem/answer/pr02_ans.py)
+> 問題: [question/question2.py](question/question2.py) / 解答: [question/answer/answer2.py](question/answer/answer2.py)
 
 ## スライス
 
@@ -123,7 +123,7 @@ print(numbers[::-1])  # 出力: [4, 3, 2, 1, 0]  (逆順)
 
 サンプル: [example/ex03.py](example/ex03.py)
 
-> 練習: [problem/pr03.py](problem/pr03.py) / 解答: [problem/answer/pr03_ans.py](problem/answer/pr03_ans.py)
+> 問題: [question/question3.py](question/question3.py) / 解答: [question/answer/answer3.py](question/answer/answer3.py)
 
 ## よく使うメソッド
 
@@ -143,7 +143,7 @@ fruits.index("apple")       # 値のインデックスを返す
 
 サンプル: [example/ex04.py](example/ex04.py)
 
-> 練習: [problem/pr04.py](problem/pr04.py) / 解答: [problem/answer/pr04_ans.py](problem/answer/pr04_ans.py)
+> 問題: [question/question4.py](question/question4.py) / 解答: [question/answer/answer4.py](question/answer/answer4.py)
 
 ## for文との組み合わせ
 
@@ -161,7 +161,7 @@ for i, fruit in enumerate(fruits):
 
 サンプル: [example/ex05.py](example/ex05.py)
 
-> 練習: [problem/pr05.py](problem/pr05.py) / 解答: [problem/answer/pr05_ans.py](problem/answer/pr05_ans.py)
+> 問題: [question/question5.py](question/question5.py) / 解答: [question/answer/answer5.py](question/answer/answer5.py)
 
 ---
 
@@ -234,7 +234,7 @@ for key, value in player.items():
     print(key, value)
 ```
 
-> 練習: [problem/pr06.py](problem/pr06.py) / 解答: [problem/answer/pr06_ans.py](problem/answer/pr06_ans.py)
+> 問題: [question/question6.py](question/question6.py) / 解答: [question/answer/answer6.py](question/answer/answer6.py)
 
 ## よく使うメソッド（辞書）
 
@@ -251,7 +251,7 @@ for key, value in player.items():
 print(player.get("mp", 0))   # キー "mp" がなければ 0 を返す
 ```
 
-> 練習: [problem/pr07.py](problem/pr07.py) / 解答: [problem/answer/pr07_ans.py](problem/answer/pr07_ans.py)
+> 問題: [question/question7.py](question/question7.py) / 解答: [question/answer/answer7.py](question/answer/answer7.py)
 
 ---
 
@@ -299,7 +299,7 @@ matrix[0][1] = 99
 
 サンプル: [example/ex06.py](example/ex06.py)
 
-> 練習: [problem/pr08.py](problem/pr08.py) / 解答: [problem/answer/pr08_ans.py](problem/answer/pr08_ans.py)
+> 問題: [question/question8.py](question/question8.py) / 解答: [question/answer/answer8.py](question/answer/answer8.py)
 
 ## clear
 
@@ -323,7 +323,7 @@ numbers.sort(reverse=True)   # 降順: [5, 4, 3, 1, 1]
 
 サンプル: [example/ex08.py](example/ex08.py)
 
-> 練習: [problem/pr09.py](problem/pr09.py) / 解答: [problem/answer/pr09_ans.py](problem/answer/pr09_ans.py)
+> 問題: [question/question9.py](question/question9.py) / 解答: [question/answer/answer9.py](question/answer/answer9.py)
 
 ## reverse
 
@@ -336,7 +336,7 @@ numbers.reverse()  # [3, 2, 1]
 
 サンプル: [example/ex09.py](example/ex09.py)
 
-> 練習: [problem/pr10.py](problem/pr10.py) / 解答: [problem/answer/pr10_ans.py](problem/answer/pr10_ans.py)
+> 問題: [question/question10.py](question/question10.py) / 解答: [question/answer/answer10.py](question/answer/answer10.py)
 
 ---
 
@@ -361,10 +361,10 @@ for i in range(len(matrix)):
 
 サンプル: [example/ex11.py](example/ex11.py) / [example/ex12.py](example/ex12.py)
 
-> 練習: [problem/pr11.py](problem/pr11.py) / 解答: [problem/answer/pr11_ans.py](problem/answer/pr11_ans.py)
+> 問題: [question/question11.py](question/question11.py) / 解答: [question/answer/answer11.py](question/answer/answer11.py)
 
-> 練習: [problem/pr12.py](problem/pr12.py) / 解答: [problem/answer/pr12_ans.py](problem/answer/pr12_ans.py)
+> 問題: [question/question12.py](question/question12.py) / 解答: [question/answer/answer12.py](question/answer/answer12.py)
 
-> 練習: [problem/pr13.py](problem/pr13.py) / 解答: [problem/answer/pr13_ans.py](problem/answer/pr13_ans.py)
+> 問題: [question/question13.py](question/question13.py) / 解答: [question/answer/answer13.py](question/answer/answer13.py)
 
-> 練習（応用）: [012_TicTocToe](../012_TicTocToe/problem/TicTocToe.py) / 解答: [012_TicTocToe/answer](../012_TicTocToe/problem/answer/TicTocToe.py)
+> 問題（応用）: [012_TicTocToe/example/TicTocToe.py](../012_TicTocToe/example/TicTocToe.py)

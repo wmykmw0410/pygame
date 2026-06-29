@@ -9,40 +9,25 @@
 """
 
 # 現在の予約状況
-restaurant = [
-    ["予約済み", "予約済み", "空席"],
-    ["予約済み", "空席", "予約済み"]
-]
 
 # 処理前の座席を表示
-print(restaurant)
 
 # 例外処理
-try:
 
     # 行を入力させる
-    row = int(input("行を入力してください"))
 
     # 列を入力させる
-    col = int(input("列を入力してください"))
 
     # 空席の時
-    if restaurant[row][col] == "空席":
 
         # 予約済みにする
-        restaurant[row][col] = "予約済み"
 
     # 予約済みの時
-    else:
 
         # 「その席は入力済みです」と表示する
-        print("その席は入力済みです")
 
 # 入力が無効の場合
-except IndexError:
 
     # 「入力が無効です」と表示する
-    print("入力が無効です")
 
 # 処理後の座標を表示
-print(restaurant)

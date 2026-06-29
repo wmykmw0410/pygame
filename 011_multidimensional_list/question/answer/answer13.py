@@ -20,7 +20,12 @@ matrix = [
     [7, 8, 9]
 ]
 
-rotated_matrix = [[None for _ in range(3)] for _ in range(3)]
+rotated_matrix = []
+for _ in range(3):
+    row = []
+    for _ in range(3):
+        row.append(None)
+    rotated_matrix.append(row)
 
 
 # rotated_matrix = [
