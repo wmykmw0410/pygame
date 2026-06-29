@@ -18,7 +18,7 @@ class Cat(Animal):
 
 class GuideDog(Dog):
     def __init__(self, name, owner):
-        super().__init__(name)    # 親（Dog → Animal）の __init__ を呼ぶ
+        super().__init__(name)    # 親(Dog -> Animal)の __init__ を呼ぶ
         self.owner = owner        # GuideDog 独自のプロパティ
 
     def guide(self):

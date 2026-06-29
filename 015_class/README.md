@@ -3,13 +3,16 @@
 ```
 
 # 目次
+- [目次](#目次)
 - [クラスとは](#クラスとは)
 - [クラスの定義](#クラスの定義)
   - [属性の種類: インスタンス変数とクラス変数](#属性の種類-インスタンス変数とクラス変数)
 - [インスタンスの生成と利用](#インスタンスの生成と利用)
+  - [Q1. カウンタークラス](#q1-カウンタークラス)
 - [複数のインスタンス](#複数のインスタンス)
+  - [Q2. キャラクタークラス](#q2-キャラクタークラス)
 - [継承](#継承)
-- [pygame で段階的に作る](#pygame-で段階的に作る)
+  - [Q3. 敵クラスを継承で作る](#q3-敵クラスを継承で作る)
 
 ---
 
@@ -147,24 +150,7 @@ player.show_status()  # 勇者 HP: 50
 
 ## Q1. カウンタークラス
 
-`Counter` クラスを作ろう。
-
-- 属性（インスタンス変数）: `count = 0`
-- `increment()` → count を 1 増やす
-- `decrement()` → count を 1 減らす（0 未満にはならない）
-- `reset()` → count を 0 に戻す
-- `show()` → 現在の count を表示する
-
-以下の手順で動作を確認する。
-
-```
-1. Counter() でインスタンスを作る
-2. increment() を 3 回呼んで show() → 3 が表示される
-3. decrement() を 1 回呼んで show() → 2 が表示される
-4. reset() を呼んで show() → 0 が表示される
-```
-
-解答: [answer/Q1_ans.py](answer/Q1_ans.py)
+> 問題: [question/question1.py](question/question1.py) / 解答: [question/answer/answer1.py](question/answer/answer1.py)
 
 ---
 
@@ -199,21 +185,7 @@ for p in party:
 
 ## Q2. キャラクタークラス
 
-`Character` クラスを作って、2体のキャラクターを戦わせよう。
-
-- 属性（インスタンス変数）: `name`, `hp = 100`, `attack_power`
-- `attack(target)` → `target.hp` を `attack_power` 分減らし、結果を表示する
-- `is_alive()` → `hp > 0` なら `True` を返す
-
-```
-戦闘の流れ:
-1. hero = Character("勇者", attack_power=30) を作る
-2. demon = Character("魔王", attack_power=20) を作る
-3. どちらかの is_alive() が False になるまで交互に attack() を呼ぶ
-4. 倒したほうを表示する
-```
-
-解答: [answer/Q2_ans.py](answer/Q2_ans.py)
+> 問題: [question/question2.py](question/question2.py) / 解答: [question/answer/answer2.py](question/answer/answer2.py)
 
 ---
 
@@ -266,142 +238,4 @@ for a in animals:
 
 ## Q3. 敵クラスを継承で作る
 
-Q2 で作った `Character` を親クラスとして、`Enemy` クラスを作ろう。
-
-```
-step1. Enemy(Character) を定義する
-         __init__(self, name, attack_power) で super() を呼ぶ
-         Enemy 専用のプロパティとして hp = 150 を設定する
-
-step2. attack() をオーバーライドする
-         攻撃力を 1.5 倍にして target.hp を減らす（int に変換する）
-         攻撃結果を表示する
-
-step3. 以下で戦わせる
-         hero = Character("勇者", attack_power=30)
-         boss = Enemy("ラスボス", attack_power=15)
-```
-
-> 次の `016_BreakoutClone_class_ver` `017_shooting_game_class_ver` では、既存ゲームを段階的にクラス化する練習をする。  
-> `019_frog_blaster` では、クラスの考え方を活かしてゼロからゲームを設計する。
-
-解答: [answer/Q3_ans.py](answer/Q3_ans.py)
-
----
-
-# pygame で段階的に作る
-
-ここまで学んだクラスの知識を使って、バトルゲームを **4ステップ** で作っていく。  
-各ファイルを順番に動かしながら、どこが変わったかを確認しよう。
-
-| ファイル | 内容 |
-| --- | --- |
-| [ex01.py](example/ex01.py) | Player クラスの基本（純Python） |
-| [ex02.py](example/ex02.py) | 複数インスタンスとリスト（純Python） |
-| [ex03.py](example/ex03.py) | 継承 Animal / Dog / Cat（純Python） |
-| [ex04.py](example/ex04.py) | pygame で関数だけで書く |
-| [ex05.py](example/ex05.py) | pygame で Player クラスに変換 |
-| [ex06.py](example/ex06.py) | pygame で Enemy クラスを追加 |
-| [ex07.py](example/ex07.py) | pygame で攻撃ターンを実装（完成） |
-
----
-
-## ex04 — 関数だけで書いてみる
-
-サンプル: [example/ex04.py](example/ex04.py)
-
-プレイヤー3人分のデータを**変数と関数**で管理する。  
-→ 変数名がどんどん増えて管理しにくいことを確認する。
-
-```python
-name1, hp1, color1 = "勇者",    100, pg.Color("ROYALBLUE")
-name2, hp2, color2 = "魔法使い",  70, pg.Color("PURPLE")
-name3, hp3, color3 = "戦士",    130, pg.Color("FIREBRICK")
-
-def draw_player(name, cx, color, hp):
-    ...
-
-draw_player(name1, 100, color1, hp1)
-draw_player(name2, 300, color2, hp2)
-draw_player(name3, 500, color3, hp3)
-```
-
----
-
-## ex05 — Player クラスにまとめる
-
-サンプル: [example/ex05.py](example/ex05.py)
-
-ex04 の変数と関数を `Player` クラスに集約する。  
-→ リストに入れてまとめて処理できるようになることを確認する。
-
-```python
-class Player():
-    def __init__(self, name, cx, color, hp):
-        self.name  = name
-        self.hp    = hp
-        self.rect  = pg.Rect(cx - 30, 200, 60, 60)
-        self.color = color
-
-    def take_damage(self, amount): ...
-    def draw(self):               ...
-
-party = [Player("勇者", 100, ...), Player("魔法使い", 300, ...), Player("戦士", 500, ...)]
-
-for p in party:
-    p.draw()    # まとめて描画
-```
-
----
-
-## ex06 — Enemy クラスを追加する
-
-サンプル: [example/ex06.py](example/ex06.py)
-
-`Enemy` クラスを追加し、SPACE キーでパーティーが攻撃できるようにする。  
-→ 複数のクラスが連携して動くことを確認する。
-
-```python
-class Enemy():
-    def __init__(self, name, hp): ...
-    def draw(self):               ...
-
-enemy = Enemy("スライム", 80)
-
-# SPACE → ランダムな1人が攻撃
-alive = []
-for p in party:
-    if p.is_alive():
-        alive.append(p)
-attacker = random.choice(alive)
-enemy.hp -= attacker.attack
-```
-
----
-
-## ex07 — 攻撃ターンを追加する（完成）
-
-サンプル: [example/ex07.py](example/ex07.py)
-
-ex06 に**敵の反撃**と**勝敗判定**を追加して完成。
-
-```python
-# パーティーの攻撃後、敵が反撃する
-alive = []
-for p in party:
-    if p.is_alive():
-        alive.append(p)
-target = random.choice(alive)
-target.take_damage(enemy.attack)
-
-# 勝敗判定
-if not enemy.is_alive():
-    message = "スライムをたおした！"
-
-party_alive = False
-for p in party:
-    if p.is_alive():
-        party_alive = True
-if not party_alive:
-    message = "パーティーは全滅した…"
-```
+> 問題: [question/question3.py](question/question3.py) / 解答: [question/answer/answer3.py](question/answer/answer3.py)

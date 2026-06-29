@@ -6,7 +6,7 @@ class Character():
 
     def attack(self, target):
         target.hp -= self.attack_power
-        print(f"{self.name}の攻撃！　{target.name}に{self.attack_power}ダメージ！（残りHP: {target.hp}）")
+        print(f"{self.name}の攻撃! {target.name}に{self.attack_power}ダメージ!(残りHP: {target.hp})")
 
     def is_alive(self):
         return self.hp > 0
@@ -21,6 +21,6 @@ while hero.is_alive() and demon.is_alive():
         demon.attack(hero)
 
 if hero.is_alive():
-    print(f"{hero.name}の勝利！")
+    print(f"{hero.name}の勝利!")
 else:
-    print(f"{demon.name}の勝利！")
+    print(f"{demon.name}の勝利!")
