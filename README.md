@@ -36,7 +36,6 @@
   - [ ] ex02
   - [ ] ex03
   - [ ] ex04
-  - [ ] ex05
 - [ ] 007_switch_screen — 画面切り替え・ボタン処理
   - [ ] 01_display_page
   - [ ] 02_btn_to_jamp
@@ -73,12 +72,15 @@
   - [ ] ex01
   - [ ] ex02
   - [ ] ex03
+  - [ ] Q1
+  - [ ] Q2
+  - [ ] Q3
+- [ ] 016_battle_game — バトルゲーム（段階的実装）
+  - [ ] ex01
+  - [ ] ex02
+  - [ ] ex03
   - [ ] ex04
   - [ ] ex05
-  - [ ] ex06
-  - [ ] ex07
-- [ ] 016_battle_game — バトルゲーム（段階的実装）
-  - [ ] Q1
 - [ ] 017_BreakoutClone_class_ver — クラス化練習（ブロック崩し）
   - [ ] ex01
   - [ ] ex02
