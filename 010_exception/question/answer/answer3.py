@@ -20,10 +20,9 @@ deck = []
 for suit in suits:
     for rank in ranks:
         deck.append(f"{suit}の{rank}")
-print(deck)
 
-# # ランダムに1枚を選ぶ
-# draw_card = random.choice(deck)
+# ランダムに1枚を選ぶ
+draw_card = random.choice(deck)
 
-# # 選んだカードを表示
-# print(f"選んだカードは{draw_card}")
+# 選んだカードを表示
+print(f"選んだカードは{draw_card}")

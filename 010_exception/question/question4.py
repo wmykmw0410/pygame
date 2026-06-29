@@ -8,32 +8,20 @@
 また、シェルからの入力が無効であった場合、適切に例外処理せよ
 """
 
-import random
 
 # トランプのスートとランクを定義
-suits = ["ハート", "ダイヤ", "クラブ", "スペード"]
-
-ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
-
 
 # 関数：カードを引く
-def draw_cards(deck, num_cards):
 
     # 空の配列draw_cardsを用意する
 
     # シェルから入力された枚数分、繰り返す
 
         # deckからpopしたカードをdraw_cardsに追加する
-    
+
     # 戻り値：draw_cards
 
-    
 # トランプの山札を作成
-deck = []
-for suit in suits:
-    for rank in ranks:
-        deck.append(f"{suit}の{rank}")
-
 
 # 山札をシャッフルする
 
