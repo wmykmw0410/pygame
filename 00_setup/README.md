@@ -2,6 +2,12 @@
 pygameを動かすための環境を準備しましょう
 ```
 
+| ツール | バージョン |
+| --- | --- |
+| Python | 3.12 系 |
+| pip | 25.2 |
+| pygame | 2.6.1（SDL 2.28.4） |
+
 # 目次
 - [Pythonのインストール](#pythonのインストール)
 - [Pythonの確認](#pythonの確認)
@@ -20,6 +26,8 @@ pygameを動かすための環境を準備しましょう
 | Mac | `.pkg` ファイルをダウンロードして実行 |
 | Windows | `.exe` ファイルをダウンロードして実行。インストール時に **「Add Python to PATH」にチェックを入れる** |
 | Linux | `sudo apt install python3.12` |
+
+> このカリキュラムでは **Python 3.12 系** を使用する
 
 ---
 
@@ -74,10 +82,18 @@ pip --version
 インストール確認
 
 ```bash
-pip list
+pip show pygame
 ```
 
-リストの中に `pygame` があれば成功
+以下のように表示されれば成功
+
+```
+Name: pygame
+Version: 2.6.1
+...
+```
+
+> このカリキュラムでは **pygame 2.6.1**（SDL 2.28.4）を使用する
 
 ---
 
@@ -94,3 +110,5 @@ ERROR: No matching distribution found for pygame
 | --- | --- |
 | Mac / Linux | `pip install --upgrade pip==25.2` |
 | Windows | `py -m pip install --upgrade pip==25.2` |
+
+> このカリキュラムでは **pip 25.2** を使用する
