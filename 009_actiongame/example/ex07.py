@@ -116,8 +116,14 @@ def gamestage():
         page = 3
 
     ## オバケの処理
-    ovx = 1 if enemyrect.x < myrect.x else -1  # プレイヤーの方向に1ずつ近づく
-    ovy = 1 if enemyrect.y < myrect.y else -1
+    if enemyrect.x < myrect.x:  # プレイヤーの方向に1ずつ近づく
+        ovx = 1
+    else:
+        ovx = -1
+    if enemyrect.y < myrect.y:
+        ovy = 1
+    else:
+        ovy = -1
     enemyrect.x += ovx
     enemyrect.y += ovy
     if ovx > 0:
