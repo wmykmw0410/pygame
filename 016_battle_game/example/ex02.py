@@ -1,5 +1,5 @@
 # ex02: Player クラスにまとめる
-# → ex01 の変数・関数を1つのクラスにまとめてリストで管理する
+# → ex01 の変数・関数を1つの Player クラスにまとめて、勇者オブジェクトを描画する
 
 import pygame as pg
 import sys
@@ -36,12 +36,7 @@ class Player():
         screen.blit(hp_s, hp_s.get_rect(centerx=self.rect.centerx, top=self.rect.bottom + 6))
 
 
-# リストで管理できるのでまとめて処理できる
-party = [
-    Player("勇者",    100, pg.Color("ROYALBLUE"), hp=100),
-    Player("魔法使い", 300, pg.Color("PURPLE"),    hp=70),
-    Player("戦士",    500, pg.Color("FIREBRICK"), hp=130),
-]
+hero = Player("勇者", 300, pg.Color("ROYALBLUE"), hp=100)
 
 while True:
     for event in pg.event.get():
@@ -49,14 +44,12 @@ while True:
             pg.quit()
             sys.exit()
         if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
-            for p in party:
-                p.take_damage(10)   # まとめて処理できる
+            hero.take_damage(10)
 
     screen.fill(pg.Color("DARKSLATEGRAY"))
-    for p in party:
-        p.draw()
+    hero.draw()
 
-    msg = font_s.render("SPACE: 全員に 10 ダメージ", True, pg.Color("LIGHTGRAY"))
+    msg = font_s.render("SPACE: 勇者に 10 ダメージ", True, pg.Color("LIGHTGRAY"))
     screen.blit(msg, msg.get_rect(centerx=300, top=340))
 
     pg.display.update()

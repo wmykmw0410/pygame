@@ -1,6 +1,5 @@
-# ex05: 攻撃ターンを追加して完成させる
-# → ex04 に敵の反撃・全滅チェック・メッセージリストを追加する
-# → max_hp と take_damage() を Character に移し、Enemy も継承を使うようにする
+# ex06: 複数の敵と連戦する
+# → enemy_queue で戦う順序を管理し、スライムを倒したらドラゴンと戦う
 
 import pygame as pg
 import sys
@@ -9,7 +8,7 @@ from pathlib import Path
 
 pg.init()
 screen = pg.display.set_mode((600, 400))
-pg.display.set_caption("ex05: バトルゲーム（完成）")
+pg.display.set_caption("ex06: 連戦")
 clock  = pg.time.Clock()
 FONT   = Path(__file__).resolve().parent.parent / "fonts" / "NotoSansCJKjp-Regular.otf"
 font   = pg.font.Font(FONT, 24)
@@ -17,7 +16,6 @@ font_s = pg.font.Font(FONT, 20)
 WHITE  = pg.Color("WHITE")
 
 
-# ── ex04 との違い: max_hp と take_damage() を Character に移した ──
 class Character():
     def __init__(self, name, hp):
         self.name   = name
@@ -51,14 +49,14 @@ class Player(Character):
         screen.blit(hp_s, hp_s.get_rect(centerx=self.rect.centerx, top=self.rect.bottom + 6))
 
 
-# ── ex04 との違い: Enemy も Character(Player と同じ基底クラス)から派生させた ──
+# ── ex05 との違い: color / size を引数で受け取れるようにした ──
 class Enemy(Character):
-    def __init__(self, name, hp, attack):
+    def __init__(self, name, hp, attack, color="DARKGREEN", size=70):
         super().__init__(name, hp)   # ← Character の __init__ を呼ぶ
         self.attack = attack
-        self.rect   = pg.Rect(0, 40, 70, 70)
+        self.color  = pg.Color(color)
+        self.rect   = pg.Rect(0, 40, size, size)
         self.rect.centerx = 300
-        self.color  = pg.Color("DARKGREEN")
 
     # is_alive() / take_damage() は Character から継承 → 書かなくてよい
 
@@ -71,6 +69,10 @@ class Enemy(Character):
         screen.blit(hp_s, hp_s.get_rect(centerx=300, top=self.rect.bottom + 6))
 
 
+# ── ex05 との違い: enemy_queue で次の敵を管理する ──
+enemy_queue = [
+    Enemy("ドラゴン", 200, 20, color="DARKRED", size=90),
+]
 enemy = Enemy("スライム", 80, 12)
 party = [
     Player("勇者",    100, pg.Color("ROYALBLUE"), hp=100, attack=25),
@@ -100,14 +102,21 @@ while True:
             messages.append(f"{attacker.name}の攻撃! {dmg}ダメージ!")
 
             if not enemy.is_alive():
-                messages.append("スライムをたおした!")
-                game_over = True
+                messages.append(f"{enemy.name}をたおした!")
+                # ── ex05 との違い: 次の敵がいれば交代する ──
+                if enemy_queue:
+                    enemy = enemy_queue.pop(0)
+                    messages.append(f"{enemy.name}が現れた！")
+                    messages.append("SPACE: 攻撃")
+                else:
+                    messages.append("全ての敵をたおした！")
+                    game_over = True
             else:
                 # 敵の反撃
                 target = random.choice(alive)
                 edm = random.randint(enemy.attack - 3, enemy.attack + 3)
                 target.take_damage(edm)
-                messages.append(f"スライムの反撃! {target.name}に{edm}ダメージ!")
+                messages.append(f"{enemy.name}の反撃! {target.name}に{edm}ダメージ!")
 
                 # 全滅チェック
                 if not any(p.is_alive() for p in party):
