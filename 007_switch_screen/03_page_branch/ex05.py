@@ -7,13 +7,13 @@ screen = pg.display.set_mode((800, 600))
 pg.display.set_caption("枝分かれ紙芝居")
 clock = pg.time.Clock()
 
-img1 = pg.image.load("../images/root1.png")
-img2 = pg.image.load("../images/root2.png")
-img3 = pg.image.load("../images/root3.png")
-img4 = pg.image.load("../images/root4.png")
-img5 = pg.image.load("../images/root5.png")
-next_img = pg.image.load("../images/nextbtn.png")
-replay_img = pg.image.load("../images/replaybtn.png")
+img1 = pg.image.load("007_switch_screen/images/root1.png")
+img2 = pg.image.load("007_switch_screen/images/root2.png")
+img3 = pg.image.load("007_switch_screen/images/root3.png")
+img4 = pg.image.load("007_switch_screen/images/root4.png")
+img5 = pg.image.load("007_switch_screen/images/root5.png")
+next_img = pg.image.load("007_switch_screen/images/nextbtn.png")
+replay_img = pg.image.load("007_switch_screen/images/replaybtn.png")
 
 pushFlag = False
 

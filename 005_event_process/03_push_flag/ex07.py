@@ -7,7 +7,7 @@ pg.init()
 screen = pg.display.set_mode((800, 600))
 pg.display.set_caption("マウスでボタンを押したか調べる(フラグ)")
 clock = pg.time.Clock()
-next_img = pg.image.load("../images/nextbtn.png")
+next_img = pg.image.load("005_event_process/images/nextbtn.png")
 pushFlag = False
 
 # ループ

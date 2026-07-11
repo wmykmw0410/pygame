@@ -9,7 +9,7 @@ pg.init()
 screen = pg.display.set_mode((800, 600))
 pg.display.set_caption("車の画像サイズを変更する")
 clock = pg.time.Clock()
-img1 = pg.image.load("../images/car.png")
+img1 = pg.image.load("004_draw_images/images/car.png")
 img1 = pg.transform.scale(img1, (50, 50))
 
 # 2.この下をずっとループする

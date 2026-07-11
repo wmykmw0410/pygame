@@ -7,11 +7,11 @@ screen = pg.display.set_mode((800, 600))
 pg.display.set_caption("ページ切り替え")
 clock = pg.time.Clock()
 
-img1 = pg.image.load("../images/flower1.png")
-img2 = pg.image.load("../images/flower2.png")
-img3 = pg.image.load("../images/flower3.png")
-img4 = pg.image.load("../images/flower4.png")
-next_img = pg.image.load("../images/nextbtn.png")
+img1 = pg.image.load("007_switch_screen/images/flower1.png")
+img2 = pg.image.load("007_switch_screen/images/flower2.png")
+img3 = pg.image.load("007_switch_screen/images/flower3.png")
+img4 = pg.image.load("007_switch_screen/images/flower4.png")
+next_img = pg.image.load("007_switch_screen/images/nextbtn.png")
 
 pushFlag = False
 

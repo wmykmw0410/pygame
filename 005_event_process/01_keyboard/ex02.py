@@ -7,7 +7,7 @@ pg.init()
 screen = pg.display.set_mode((800, 600))
 pg.display.set_caption("左右でキャラクタが動く")
 clock = pg.time.Clock()
-imageR = pg.image.load("../images/playerR.png")
+imageR = pg.image.load("005_event_process/images/playerR.png")
 myrect = imageR.get_rect(topleft=(300, 200))
 
 # ループ
