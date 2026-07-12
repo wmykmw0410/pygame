@@ -11,8 +11,10 @@
   - [モジュール分割](#モジュール分割)
 - [__name__ == "__main__"](#__name__--__main__)
 - [パッケージの作り方](#パッケージの作り方)
-  - [相対インポート（`.`）](#相対インポート)
+  - [相対インポート（`.`）](#相対インポート（）)
 - [補足](#補足)
+  - [モジュールの属性を調べる](#モジュールの属性を調べる)
+  - [ゲームのパッケージ化](#ゲームのパッケージ化)
 
 ---
 
@@ -98,6 +100,13 @@ random.choice(["a", "b"]) # リストからランダムに1つ選ぶ
 import time
 
 time.sleep(5)  # 5秒間スリープ
+
+# 応用: 1秒ずつスリープしてカウントする
+print(1)
+time.sleep(1)
+print(2)
+time.sleep(1)
+print(3)
 ```
 
 ## datetime
@@ -353,3 +362,45 @@ def greet(): pass
 
 print(dir())   # ['greet', 'x', ...] のように表示される
 ```
+
+## ゲームのパッケージ化
+
+このコースで作るゲームも、ここまで学んだモジュール分割・パッケージの考え方で構成されている
+
+例: [021_Tetris/Tetris/](../021_Tetris/Tetris/)
+
+```
+Tetris/
+├── main.py       ← エントリーポイント（ゲームの起動）
+├── config.py     ← 定数（画面サイズ・色など）
+└── game/         ← ゲームロジックをまとめたパッケージ
+    ├── __init__.py         ← TetrisGame・Renderer をまとめてエクスポート
+    ├── tetris_game.py
+    ├── tetris_renderer.py
+    └── tetrimino.py
+```
+
+`__init__.py` で、外部から使うクラスをまとめてエクスポートしておく（`calculation/__init__.py` と同じ考え方）
+
+```python
+# game/__init__.py
+from .tetris_game     import TetrisGame
+from .tetris_renderer import Renderer
+```
+
+`main.py`（エントリーポイント）は `game/` パッケージの**外**にあるので、`game` から直接インポートできる
+
+```python
+# main.py
+from config import WIDTH, HEIGHT, FPS
+from game   import TetrisGame, Renderer
+```
+
+`game/` パッケージ内のモジュール同士（`tetris_game.py` から `tetrimino.py` を使うときなど）を参照するときは、パッケージ名からのインポートを使う
+
+```python
+# game/tetris_game.py
+from game.tetrimino import Tetrimino, Grid
+```
+
+> 実行するときは `python Tetris/main.py` のように、`main.py` のあるフォルダを基準に `game/` パッケージを認識できる状態で実行する

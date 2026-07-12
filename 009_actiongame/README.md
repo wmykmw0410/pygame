@@ -20,7 +20,7 @@
 
 ```python
 ## プレイヤーデータ
-myimgR = pg.image.load("../images/playerR.png")
+myimgR = pg.image.load(IMG_DIR / "playerR.png")
 myimgR = pg.transform.scale(myimgR, (40, 50))
 myimgL = pg.transform.flip(myimgR, True, False)  # 左右反転した画像
 myrect = myimgR.get_rect(topleft=(50, 200))
@@ -122,7 +122,7 @@ for trap in traps:
 
 ```python
 if myrect.collidelist(traps) != -1:
-    pg.mixer.Sound("../sounds/pi.wav").play()
+    pg.mixer.Sound(SND_DIR / "pi.wav").play()
     page = 2
 ```
 
@@ -159,7 +159,7 @@ goalrect = pg.Rect(750, 250, 30, 100)
 
 pg.draw.rect(screen, pg.Color("GOLD"), goalrect)
 if myrect.colliderect(goalrect):
-    pg.mixer.Sound("../sounds/up.wav").play()
+    pg.mixer.Sound(SND_DIR / "up.wav").play()
     page = 3
 ```
 
@@ -172,8 +172,14 @@ if myrect.colliderect(goalrect):
 毎フレーム、プレイヤーの方向に1ずつ近づく
 
 ```python
-ovx = 1 if enemyrect.x < myrect.x else -1  # プレイヤーが右なら+1、左なら-1
-ovy = 1 if enemyrect.y < myrect.y else -1
+if enemyrect.x < myrect.x:  # プレイヤーの方向に1ずつ近づく
+    ovx = 1
+else:
+    ovx = -1
+if enemyrect.y < myrect.y:
+    ovy = 1
+else:
+    ovy = -1
 enemyrect.x += ovx
 enemyrect.y += ovy
 ```

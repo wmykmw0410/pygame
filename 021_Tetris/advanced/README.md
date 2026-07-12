@@ -251,7 +251,7 @@ step3. _do_hold() メソッドを作る
          can_hold = False にして再ホールドを禁止する
 
 step4. _make_piece(kind) メソッドを作る
-         TETORIMINO_SHAPES[kind] から shape と color を取得する
+         TETRIMINO_SHAPES[kind] から shape と color を取得する
          Tetrimino を新しく作って spawn_tetrimino() で位置を設定して返す
 
 step5. ピースが着地したとき（update 内）can_hold = True に戻す
@@ -280,9 +280,12 @@ class Tetrimino:
 ```python
 # tetris_game.py
 def _make_piece(self, kind):
-    data  = TETORIMINO_SHAPES[kind]
+    data = TETRIMINO_SHAPES[kind]
+    shape_copy = []
+    for row in data["shape"]:
+        shape_copy.append(row[:])
     piece = Tetrimino(
-        shape=[row[:] for row in data["shape"]],
+        shape=shape_copy,
         color=data["color"],
         x=0, y=0,
         kind=kind,
@@ -325,8 +328,8 @@ label = self.font.render("HOLD", True, WHITE)
 self.screen.blit(label, label.get_rect(centerx=panel_cx, y=170))
 
 if game.hold_kind is not None:
-    shape  = TETORIMINO_SHAPES[game.hold_kind]["shape"]
-    color  = TETORIMINO_SHAPES[game.hold_kind]["color"]
+    shape  = TETRIMINO_SHAPES[game.hold_kind]["shape"]
+    color  = TETRIMINO_SHAPES[game.hold_kind]["color"]
     if not game.can_hold:
         color = GRAY   # ホールド使用済みは暗くする
     origin_x = PANEL_X + (WIDTH - PANEL_X - len(shape[0]) * MINI_CELL) // 2

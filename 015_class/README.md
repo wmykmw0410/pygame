@@ -181,7 +181,7 @@ for p in party:
 
 サンプル: [example/ex02.py](example/ex02.py)
 
-> pygame でのクラス活用は、このページ末尾の **「pygame で段階的に作る」** を参照。
+> pygame でのクラス活用は、[016_battle_game](../016_battle_game/README.md) で段階的に学べる。
 
 ## Q2. キャラクタークラス
 

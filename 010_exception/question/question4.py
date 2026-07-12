@@ -13,13 +13,13 @@
 
 # 関数：カードを引く
 
-    # 空の配列draw_cardsを用意する
+    # 空の配列drawn_cardsを用意する
 
     # シェルから入力された枚数分、繰り返す
 
-        # deckからpopしたカードをdraw_cardsに追加する
+        # deckからpopしたカードをdrawn_cardsに追加する
 
-    # 戻り値：draw_cards
+    # 戻り値：drawn_cards
 
 # トランプの山札を作成
 

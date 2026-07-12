@@ -185,7 +185,10 @@ class Player(Character):
     # is_alive() / take_damage() は Character から継承 → 書かなくてよい
 
     def draw(self):
-        color = self.color if self.is_alive() else pg.Color("GRAY")
+        if self.is_alive():
+            color = self.color
+        else:
+            color = pg.Color("GRAY")
         pg.draw.rect(screen, color, self.rect)
         name_s = font.render(self.name, True, WHITE)
         screen.blit(name_s, name_s.get_rect(centerx=self.rect.centerx, bottom=self.rect.top - 6))
@@ -271,7 +274,10 @@ class Player(Character):
             self.hp = 0
 
     def draw(self):
-        color = self.color if self.is_alive() else pg.Color("GRAY")
+        if self.is_alive():
+            color = self.color
+        else:
+            color = pg.Color("GRAY")
         pg.draw.rect(screen, color, self.rect)
         ...
 
@@ -285,7 +291,10 @@ class Enemy(Character):
     # is_alive() は Character から継承 → 書かなくてよい
 
     def draw(self):
-        color = self.color if self.is_alive() else pg.Color("GRAY")
+        if self.is_alive():
+            color = self.color
+        else:
+            color = pg.Color("GRAY")
         pg.draw.rect(screen, color, self.rect)
         ...
 
@@ -374,7 +383,10 @@ class Player(Character):
     # is_alive() / take_damage() は Character から継承 → 書かなくてよい
 
     def draw(self):
-        color = self.color if self.is_alive() else pg.Color("GRAY")
+        if self.is_alive():
+            color = self.color
+        else:
+            color = pg.Color("GRAY")
         pg.draw.rect(screen, color, self.rect)
         ...
         hp_s = font_s.render(f"HP: {self.hp} / {self.max_hp}", True, WHITE)
@@ -393,7 +405,10 @@ class Enemy(Character):
     # is_alive() / take_damage() は Character から継承 → 書かなくてよい
 
     def draw(self):
-        color = self.color if self.is_alive() else pg.Color("GRAY")
+        if self.is_alive():
+            color = self.color
+        else:
+            color = pg.Color("GRAY")
         pg.draw.rect(screen, color, self.rect)
         ...
         hp_s = font_s.render(f"HP: {self.hp} / {self.max_hp}", True, WHITE)
@@ -404,7 +419,10 @@ if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and not game_over:
     messages = []
 
     # パーティーの攻撃
-    alive = [p for p in party if p.is_alive()]  # ← リスト内包表記でも書ける
+    alive = []
+    for p in party:
+        if p.is_alive():
+            alive.append(p)
     attacker = random.choice(alive)
     dmg = random.randint(attacker.attack - 5, attacker.attack + 5)
     enemy.take_damage(dmg)   # ← Character から継承したメソッドを使う
@@ -486,7 +504,10 @@ class Enemy(Character):
     # is_alive() / take_damage() は Character から継承 → 書かなくてよい
 
     def draw(self):
-        color = self.color if self.is_alive() else pg.Color("GRAY")
+        if self.is_alive():
+            color = self.color
+        else:
+            color = pg.Color("GRAY")
         ...
 
 

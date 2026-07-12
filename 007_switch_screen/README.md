@@ -51,8 +51,8 @@ while True:
 flower1.png と flower2.png を変数に読み込み、それぞれのページ関数で表示する
 
 ```python
-img1 = pg.image.load("../images/flower1.png")
-img2 = pg.image.load("../images/flower2.png")
+img1 = pg.image.load("007_switch_screen/images/flower1.png")
+img2 = pg.image.load("007_switch_screen/images/flower2.png")
 
 def page1():
     screen.blit(img1, (0, 0))  # 画像が800×600なので(0,0)から表示すれば画面いっぱいになる

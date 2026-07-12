@@ -27,7 +27,7 @@ OVERLAY_ALPHA = 160
 OVERLAY_TITLE_OFFSET_Y = 30
 OVERLAY_SUBTITLE_OFFSET_Y = 20
 
-TETORIMINO_SHAPES = {
+TETRIMINO_SHAPES = {
     "I": {
         "shape": [
             [1, 1, 1, 1],

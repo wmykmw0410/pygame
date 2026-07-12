@@ -19,17 +19,17 @@ ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
 # 関数：カードを引く
 def draw_cards(deck, num_cards):
 
-    # 空の配列draw_cardsを用意する
-    draw_cards = []
+    # 空の配列drawn_cardsを用意する
+    drawn_cards = []
 
     # シェルから入力された枚数分、繰り返す
     for _ in range(num_cards):
 
-        # deckからpopしたカードをdraw_cardsに追加する
-        draw_cards.append(deck.pop())
-    
-    # 戻り値：draw_cards
-    return draw_cards
+        # deckからpopしたカードをdrawn_cardsに追加する
+        drawn_cards.append(deck.pop())
+
+    # 戻り値：drawn_cards
+    return drawn_cards
 
     
 # トランプの山札を作成
@@ -66,9 +66,9 @@ except ValueError:
     num_cards = 0
 
 # 指定された枚数分だけカードを引く
-draw_cards = draw_cards(deck, num_cards)
+drawn_cards = draw_cards(deck, num_cards)
 
 # 引いたカードを表示
 print("引いたカード：")
-for card in draw_cards:
+for card in drawn_cards:
     print(card)

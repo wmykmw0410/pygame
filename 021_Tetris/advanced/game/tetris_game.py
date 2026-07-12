@@ -1,7 +1,7 @@
 import random
 import pygame as pg
 from config import (
-    ROWS, COLS, TETORIMINO_SHAPES,
+    ROWS, COLS, TETRIMINO_SHAPES,
     FALL_INTERVAL_INIT, FALL_INTERVAL_MIN,
     FALL_SPEED_STEP_LINES, FALL_SPEED_STEP_MS,
     SCORE_TABLE,
@@ -29,8 +29,8 @@ class TetrisGame:
         self.game_over     = False
 
     def _spawn_piece(self):
-        kind = random.choice(list(TETORIMINO_SHAPES.keys()))
-        data = TETORIMINO_SHAPES[kind]
+        kind = random.choice(list(TETRIMINO_SHAPES.keys()))
+        data = TETRIMINO_SHAPES[kind]
         shape_copy = []
         for row in data["shape"]:
             shape_copy.append(row[:])
@@ -50,7 +50,7 @@ class TetrisGame:
         return piece
 
     def _make_piece(self, kind):
-        data  = TETORIMINO_SHAPES[kind]
+        data  = TETRIMINO_SHAPES[kind]
         shape_copy = []
         for row in data["shape"]:
             shape_copy.append(row[:])

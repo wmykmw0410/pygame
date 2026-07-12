@@ -1,5 +1,5 @@
 Q. 
-step1. ローカルのターミナルから「Qustionフォルダ」内に、"Hello, World"を出力する「pythonファイル」を作成し、実行する
+step1. ローカルのターミナルから「Questionフォルダ」内に、"Hello, World"を出力する「pythonファイル」を作成し、実行する
 
 # カレントディレクトリの確認
 pwd
@@ -8,7 +8,7 @@ pwd
 ls 
 cd <パス>
 
-# 「Qustionフォルダ」の作成
+# 「Questionフォルダ」の作成
 mkdir Question
 
 # 「pythonファイル」の作成
@@ -31,10 +31,9 @@ cat python.py
 # pythonファイルの実行
 python ./python.py
 
-step2. ローカルのターミナルから「Qustionフォルダ」と「pythonファイル」を削除する
+step2. ローカルのターミナルから「Questionフォルダ」と「pythonファイル」を削除する
 
 # ファイルの削除
-cd ..
 rm python.py
 ls
 

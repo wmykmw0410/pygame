@@ -9,7 +9,7 @@ clock = pg.time.Clock()
 
 img1 = pg.image.load("007_switch_screen/images/root1.png")
 img2 = pg.image.load("007_switch_screen/images/root2.png")
-img5 = pg.image.load("007_switch_screen/images/root3.png")
+img3 = pg.image.load("007_switch_screen/images/root3.png")
 next_img = pg.image.load("007_switch_screen/images/nextbtn.png")
 replay_img = pg.image.load("007_switch_screen/images/replaybtn.png")
 
@@ -41,7 +41,7 @@ def page2():
     button_to_jump(btn1, 1)
 
 def page3():
-    screen.blit(img5, (0, 0))
+    screen.blit(img3, (0, 0))
     btn1 = screen.blit(replay_img, (600, 520))
     button_to_jump(btn1, 1)
 

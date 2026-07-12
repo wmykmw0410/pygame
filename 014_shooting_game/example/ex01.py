@@ -27,7 +27,7 @@ bulletrect = pg.Rect(400, -100, 16, 16)
 ## ゲームステージ
 def gamestage():
     screen.fill(pg.Color("NAVY"))
-    (mx, my) = pg.mouse.get_pos()
+    (mx, _) = pg.mouse.get_pos()
     mdown = pg.mouse.get_pressed()
 
     ## 自機の処理

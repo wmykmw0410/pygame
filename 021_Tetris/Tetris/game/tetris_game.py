@@ -3,7 +3,7 @@ from __future__ import annotations
 import random
 import pygame as pg
 from config import (
-    ROWS, COLS, TETORIMINO_SHAPES,
+    ROWS, COLS, TETRIMINO_SHAPES,
     FALL_INTERVAL_INIT, FALL_INTERVAL_MIN,
     FALL_SPEED_STEP_LINES, FALL_SPEED_STEP_MS,
 )
@@ -31,7 +31,7 @@ class TetrisGame:
 
     def _spawn_piece(self) -> Tetrimino:
         """ランダムなテトリミノを生成してスポーン位置に配置する。"""
-        mino_data = random.choice(list(TETORIMINO_SHAPES.values()))
+        mino_data = random.choice(list(TETRIMINO_SHAPES.values()))
         shape_copy = []
         for row in mino_data["shape"]:
             shape_copy.append(row[:])

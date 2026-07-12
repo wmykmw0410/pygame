@@ -95,6 +95,8 @@ font = pg.font.Font(None, 文字サイズ)
 
 Rectのそれぞれの値には、変数に".(ドット)"と「x,y,width,height」をつけてアクセスする
 
+サンプル: [03_rect_object/ex03.py](03_rect_object/ex03.py)
+
 ### 基準点
 Rectの`(x, y)`は**左上隅**が基準点になる
 

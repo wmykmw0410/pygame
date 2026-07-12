@@ -1,7 +1,6 @@
 import pygame as pg
 from config import WIDTH, HEIGHT, FPS
-from game.tetris_game import TetrisGame
-from game.tetris_renderer import Renderer
+from game import TetrisGame, Renderer
 
 pg.init()
 screen = pg.display.set_mode((WIDTH, HEIGHT))

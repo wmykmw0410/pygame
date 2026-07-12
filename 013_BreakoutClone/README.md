@@ -95,7 +95,7 @@ step5. メインループを page で分岐させる
 # ボールが落ちたらゲームオーバー（gamestage 内）
 if ballrect.y > 600:
     page = 2
-    pg.mixer.Sound(SND_DIR / "pi.wav").play()
+    pg.mixer.Sound(SND_DIR / "down.wav").play()
 ```
 
 ```python

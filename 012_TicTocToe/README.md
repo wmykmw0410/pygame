@@ -156,9 +156,13 @@ while True:
         continue
     board[row][col] = current
     result = check_winner()
-    if result is not None:
+    if result == "draw":
         print_board()
-        print(f"{result} の勝ち！" if result != "draw" else "引き分け！")
+        print("引き分け！")
+        break
+    elif result is not None:
+        print_board()
+        print(f"{result} の勝ち！")
         break
     current *= -1  # プレイヤー交代（1 ↔ -1）
 ```
@@ -192,7 +196,7 @@ pg.init()
 screen_width  = 600
 screen_height = 600
 screen = pg.display.set_mode((screen_width, screen_height))
-pg.display.set_caption('OXゲーム')
+pg.display.set_caption('ox ゲーム')
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -286,14 +290,14 @@ if event.type == pg.MOUSEBUTTONDOWN:
 def draw_board():
     for row_index in range(3):
         for col_index in range(3):
-            val = board[row_index][col_index]
-            cx = col_index * 200 + 100
-            cy = row_index * 200 + 100
-            if val == 1:
-                pg.draw.circle(screen, RED, (cx, cy), 80, 5)
-            elif val == -1:
-                pg.draw.line(screen, BLUE, (cx - 80, cy - 80), (cx + 80, cy + 80), 5)
-                pg.draw.line(screen, BLUE, (cx + 80, cy - 80), (cx - 80, cy + 80), 5)
+            col = board[row_index][col_index]
+            if col == 1:
+                pg.draw.circle(screen, RED, (col_index * 200 + 100, row_index * 200 + 100), 80, 5)
+            elif col == -1:
+                pg.draw.line(screen, BLUE, (col_index * 200 + 20, row_index * 200 + 20),
+                             (col_index * 200 + 180, row_index * 200 + 180), 5)
+                pg.draw.line(screen, BLUE, (col_index * 200 + 180, row_index * 200 + 20),
+                             (col_index * 200 + 20, row_index * 200 + 180), 5)
 ```
 
 </details>
@@ -417,3 +421,7 @@ if game_over and event.type == pg.MOUSEBUTTONDOWN:
 ```
 
 </details>
+
+---
+
+`example/TicTocToe.py` にはこの他に、ESCキーでもウィンドウを閉じられる機能が入っている(`pg.K_ESCAPE` で `run = False`)。

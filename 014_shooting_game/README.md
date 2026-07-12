@@ -39,7 +39,7 @@ myrect    = pg.Rect(400, 500, 50, 50)
 bulletrect = pg.Rect(400, -100, 16, 16)
 
 def gamestage():
-    (mx, my) = pg.mouse.get_pos()
+    (mx, _) = pg.mouse.get_pos()
     mdown = pg.mouse.get_pressed()
 
     myrect.x = mx - 25
@@ -217,6 +217,10 @@ step3. gamestage() の中でスコアをテキストとして描画する
          font.render("SCORE:" + str(score), ...) で文字列を作る
 step4. gameover() にもスコアの描画を追加する
 step5. gamereset() で score = 0 にリセットする
+step6. gameover() 内の gamereset() 呼び出しを条件付きにする
+         これまでは毎フレーム無条件に gamereset() を呼んでいたが、
+         page == 1（ボタンでリプレイに戻った直後）のときだけ呼ぶように変更し、
+         ゲームオーバー画面表示中に自機やUFOの位置がリセットされ続けないようにする
 ```
 
 <details>
@@ -225,7 +229,7 @@ step5. gamereset() で score = 0 にリセットする
 ```python
 # UFO撃墜時（gamestage 内）
 if ufo.colliderect(bulletrect):
-    score += 1
+    score += 10
     ufo.y = -100
     ufo.x = random.randint(0, 800)
     bulletrect.y = -100
@@ -248,6 +252,24 @@ def gamereset():
     bulletrect.y = -100
     for i in range(10):
         ufos[i] = pg.Rect(random.randint(0, 800), -100 * i, 50, 50)
+```
+
+```python
+# gameover 内: gamereset() の呼び出しを条件付きにする
+def gameover():
+    screen.fill(pg.Color("NAVY"))
+    font = pg.font.Font(None, 150)
+    text = font.render("GAMEOVER", True, pg.Color("RED"))
+    screen.blit(text, (100, 200))
+    btn1 = screen.blit(replay_img, (320, 480))
+    font = pg.font.Font(None, 40)
+    text = font.render("SCORE:" + str(score), True, pg.Color("WHITE"))
+    screen.blit(text, (20, 20))
+    button_to_jump(btn1, 1)
+
+    ## ボタンを押してリプレイ時にリセット
+    if page == 1:
+        gamereset()
 ```
 
 </details>

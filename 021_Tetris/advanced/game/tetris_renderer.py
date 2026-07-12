@@ -5,7 +5,7 @@ from config import (
     BLACK, GRAY, WHITE,
     FONT_SIZE, FONT_SIZE_TITLE,
     GRID_BORDER_WIDTH, OVERLAY_ALPHA,
-    TETORIMINO_SHAPES,
+    TETRIMINO_SHAPES,
 )
 
 
@@ -98,8 +98,8 @@ class Renderer:
         label = self.font.render("HOLD", True, WHITE)
         self.screen.blit(label, label.get_rect(centerx=panel_cx, y=170))
         if game.hold_kind is not None:
-            shape  = TETORIMINO_SHAPES[game.hold_kind]["shape"]
-            color  = TETORIMINO_SHAPES[game.hold_kind]["color"]
+            shape  = TETRIMINO_SHAPES[game.hold_kind]["shape"]
+            color  = TETRIMINO_SHAPES[game.hold_kind]["color"]
             if not game.can_hold:
                 color = GRAY   # ホールド済みは暗くする
             origin_x = PANEL_X + (WIDTH - PANEL_X - len(shape[0]) * MINI_CELL) // 2

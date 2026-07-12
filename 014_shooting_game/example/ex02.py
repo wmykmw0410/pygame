@@ -36,7 +36,7 @@ for i in range(10):
 ## ゲームステージ
 def gamestage():
     screen.fill(pg.Color("NAVY"))
-    (mx, my) = pg.mouse.get_pos()
+    (mx, _) = pg.mouse.get_pos()
     mdown = pg.mouse.get_pressed()
 
     ## 自機の処理

@@ -73,7 +73,7 @@ def gamestage():
         pg.mixer.Sound(SND_DIR / "pi.wav").play()
     if ballrect.y > 600:
         page = 2
-        pg.mixer.Sound(SND_DIR / "pi.wav").play()
+        pg.mixer.Sound(SND_DIR / "down.wav").play()
     ballrect.x += vx
     ballrect.y += vy
     screen.blit(ballimg, ballrect)

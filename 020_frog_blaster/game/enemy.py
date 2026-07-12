@@ -52,9 +52,9 @@ class IceEnemy(Enemy):
 
 class BombEffect():
     def __init__(self, rect, effects) -> None:
-        self._images = [
-            pg.image.load(IMG_DIR / f"bomb_{i}.png") for i in range(6)
-        ]
+        self._images = []
+        for i in range(6):
+            self._images.append(pg.image.load(IMG_DIR / f"bomb_{i}.png"))
         self._image   = self._images[0]
         self._effects = effects
         self._rect    = rect

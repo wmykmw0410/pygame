@@ -57,7 +57,7 @@ def button_to_jump(btn, newpage):
 def gamestage():
     global page
     screen.fill(pg.Color("NAVY"))
-    (mx, my) = pg.mouse.get_pos()
+    (mx, _) = pg.mouse.get_pos()
     mdown = pg.mouse.get_pressed()
 
     ## 自機の処理

@@ -39,7 +39,10 @@ class Player(Character):
     # is_alive() / take_damage() は Character から継承 → 書かなくてよい
 
     def draw(self):
-        color = self.color if self.is_alive() else pg.Color("GRAY")
+        if self.is_alive():
+            color = self.color
+        else:
+            color = pg.Color("GRAY")
         pg.draw.rect(screen, color, self.rect)
         name_s = font.render(self.name, True, WHITE)
         screen.blit(name_s, name_s.get_rect(centerx=self.rect.centerx, bottom=self.rect.top - 6))

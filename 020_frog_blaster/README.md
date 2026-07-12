@@ -5,19 +5,22 @@
 # 目次
 - [ゲームを体験する](#ゲームを体験する)
 - [ファイル構成](#ファイル構成)
-- [関数で書く問題点](#関数で書く問題点)
-- [Bullet クラスを作る](#bullet-クラスを作る)
-- [リストで複数のインスタンスを管理する](#リストで複数のインスタンスを管理する)
-- [Enemy クラスと継承](#enemy-クラスと継承)
-- [GameManager にまとめる](#gamemanager-にまとめる)
-- [Q1. 敵クラスを自分で作る](#q1-敵クラスを自分で作る)
-- [Q2. Status に経過時間を追加する](#q2-status-に経過時間を追加する)
+- [ステップ1. ウィンドウ表示を確認する](#ステップ1-ウィンドウ表示を確認する)
+- [ステップ2. Player クラスを読む](#ステップ2-player-クラスを読む)
+- [ステップ3. 関数で書く問題点を理解する](#ステップ3-関数で書く問題点を理解する)
+- [ステップ4. Bullet クラスを作る](#ステップ4-bullet-クラスを作る)
+- [ステップ5. リストで複数の弾を管理する](#ステップ5-リストで複数の弾を管理する)
+- [ステップ6. Enemy クラスと継承を作る](#ステップ6-enemy-クラスと継承を作る)
+- [ステップ7. GameManager にまとめる](#ステップ7-gamemanager-にまとめる)
+- [ステップ8. 敵の動きを関数で実装する](#ステップ8-敵の動きを関数で実装する)
+- [ステップ9. 敵クラスに書き直す](#ステップ9-敵クラスに書き直す)
+- [ステップ10. Status に経過時間を追加する](#ステップ10-status-に経過時間を追加する)
 
 ---
 
 # ゲームを体験する
 
-`game/main.py` を実行してゲームを体験しよう。
+`main.py` を実行してゲームを体験しよう。
 
 | 操作 | キー |
 | --- | --- |
@@ -34,19 +37,224 @@
 | ファイル | 役割 |
 | --- | --- |
 | `main.py` | ゲームの起動・メインループ |
-| `player.py` | プレイヤーの動き・状態管理 |
-| `enemy.py` | 敵の動き・種類・爆発エフェクト |
-| `bullet.py` | 弾の動き |
-| `gamecontrol.py` | ゲーム全体の進行管理・衝突判定 |
-| `status.py` | スコア・移動距離の表示 |
-| `sound.py` | BGM・効果音の管理 |
-| `resultscene.py` | ゲームオーバー・クリア画面 |
+| `game/__init__.py` | `GameManager`・`ResultScene` をパッケージ外へエクスポート |
+| `game/player.py` | プレイヤーの動き・状態管理 |
+| `game/enemy.py` | 敵の動き・種類・爆発エフェクト |
+| `game/bullet.py` | 弾の動き |
+| `game/gamecontrol.py` | ゲーム全体の進行管理・衝突判定 |
+| `game/status.py` | スコア・移動距離の表示 |
+| `game/sound.py` | BGM・効果音の管理 |
+| `game/resultscene.py` | ゲームオーバー・クリア画面 |
 
 各ファイルを開いてコードを確認しながら読み進めよう。
 
 ---
 
-# 関数で書く問題点
+## ステップ1. ウィンドウ表示を確認する
+
+サンプル: [main.py](main.py)
+
+pygame でゲームを動かす基本の骨格を確認しよう。
+
+## やること
+
+```
+step1. pg.init() で pygame を初期化する
+step2. pg.display.set_mode((600, 650)) でウィンドウを作る
+step3. GameManager と ResultScene を生成する
+step4. running = True でループ管理フラグを用意する
+step5. for event in pg.event.get(): で毎フレームイベントを処理する
+         pg.QUIT が来たら running = False にして終了する
+step6. game.is_playing で状態を分岐して update() を呼ぶ
+step7. pg.display.update() で画面を更新し、clock.tick(60) で FPS を制御する
+step8. ループを抜けたら pg.quit() で終了する
+```
+
+<details>
+<summary>コードを見る</summary>
+
+```python
+import pygame as pg
+from game import GameManager, ResultScene
+
+def main():
+    pg.init()
+    screen = pg.display.set_mode((600, 650))
+    pg.display.set_caption("Frog Blaster")
+    clock = pg.time.Clock()
+
+    game   = GameManager()
+    result = ResultScene(game)
+
+    running = True
+    while running:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                running = False
+
+        screen.fill(pg.Color("NAVY"))
+
+        if game.is_playing:
+            game.update()
+        else:
+            result.update()
+
+        game.draw(screen)
+        if not game.is_playing:
+            result.draw(screen)
+
+        pg.display.update()
+        clock.tick(60)
+
+    pg.quit()
+
+if __name__ == "__main__":
+    main()
+```
+
+</details>
+
+---
+
+## ステップ2. Player クラスを読む
+
+サンプル: [game/player.py](game/player.py)
+
+`Player` クラスは「状態（ステート）」によって画像と動きを切り替える。  
+`IdleState` / `MovingState` / `DamageState` の3つの状態クラスを `PlayerState` が基底クラスとして束ねている。
+
+## やること
+
+```
+step1. PlayerState 基底クラスを定義する
+         __init__(self, player) で player への参照と image を持つ
+         update(self) は派生クラスで上書きする（何もしない版を定義しておく）
+
+step2. IdleState(PlayerState) を作る
+         update() でキーが押されていたら MovingState を返す
+         押されていなければ self を返す（状態を維持）
+
+step3. MovingState(PlayerState) を作る
+         update() でアニメーション画像を切り替える
+         キーが離されたら IdleState を返す
+
+step4. DamageState(PlayerState) を作る
+         update() でタイムアウトカウントを減らす
+         0 になったら IdleState に戻る
+
+step5. Player クラスを作る
+         __init__ で self.state = IdleState(self) を設定する
+         maxhp / hp も持たせる（敵との衝突でダメージを受ける）
+         update() で self.state = self.state.update() を呼ぶ
+         draw(self, screen) でキャラ画像と HP バーを描画する（Enemy と同じ書き方）
+         damage() で self.state = DamageState(self) に切り替える
+```
+
+<details>
+<summary>コードを見る</summary>
+
+```python
+class PlayerState():
+    def __init__(self, player):
+        self.player = player
+        self.image  = None
+
+    def update(self):
+        pass
+
+
+class IdleState(PlayerState):
+    def __init__(self, player):
+        super().__init__(player)
+        self.image = pg.image.load(IMG_DIR / "kaeru1.png")
+
+    def update(self):
+        key = pg.key.get_pressed()
+        if key[pg.K_LEFT] or key[pg.K_RIGHT]:
+            return MovingState(self.player)
+        return self
+
+
+class MovingState(PlayerState):
+    def __init__(self, player):
+        super().__init__(player)
+        self.images = [
+            pg.image.load(IMG_DIR / "kaeru1.png"),
+            pg.image.load(IMG_DIR / "kaeru2.png"),
+            pg.image.load(IMG_DIR / "kaeru3.png"),
+            pg.image.load(IMG_DIR / "kaeru4.png"),
+        ]
+        self.cnt    = 0
+        self.image  = self.images[0]
+
+    def update(self):
+        self.cnt  += 1
+        self.image = self.images[self.cnt // 5 % 4]
+        key = pg.key.get_pressed()
+        if not (key[pg.K_LEFT] or key[pg.K_RIGHT]):
+            return IdleState(self.player)
+        return self
+
+
+class DamageState(PlayerState):
+    def __init__(self, player):
+        super().__init__(player)
+        self.images  = [pg.image.load(IMG_DIR / "kaeru5.png"),
+                        pg.image.load(IMG_DIR / "kaeru6.png")]
+        self.cnt     = 0
+        self.image   = self.images[0]
+        self.timeout = 20
+
+    def update(self):
+        self.cnt    += 1
+        self.image   = self.images[self.cnt // 5 % 2]
+        self.timeout -= 1
+        if self.timeout < 0:
+            return IdleState(self.player)
+        return self
+
+
+class Player():
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.state = IdleState(self)
+        self.rect  = pg.Rect(250, 550, 50, 50)
+        self.speed = 10
+        self.maxhp = 150
+        self.hp    = 150
+
+    def update(self):
+        self.state = self.state.update()
+        key = pg.key.get_pressed()
+        vx = 0
+        if key[pg.K_RIGHT]:
+            vx =  self.speed
+        if key[pg.K_LEFT]:
+            vx = -self.speed
+        if self.rect.x + vx < 0 or self.rect.x + vx > 550:
+            vx = 0
+        self.rect.x += vx
+
+    def draw(self, screen):
+        screen.blit(self.state.image, self.rect)
+        # HP バー（Enemy と同じ書き方）
+        rect1 = pg.Rect(self.rect.x, self.rect.y - 20, 4, 20)
+        h     = (self.hp / self.maxhp) * 20
+        rect2 = pg.Rect(self.rect.x, self.rect.y - h, 4, h)
+        pg.draw.rect(screen, pg.Color("RED"),   rect1)
+        pg.draw.rect(screen, pg.Color("GREEN"), rect2)
+
+    def damage(self):
+        self.state = DamageState(self)
+```
+
+</details>
+
+---
+
+## ステップ3. 関数で書く問題点を理解する
 
 弾の処理を**関数**だけで書くと次のようになる。
 
@@ -57,8 +265,8 @@ bullet_alive = False
 
 def shoot(player_x, player_y):
     global bullet_x, bullet_y, bullet_alive
-    bullet_x = player_x + 17
-    bullet_y = player_y - 10
+    bullet_x     = player_x + 17
+    bullet_y     = player_y - 10
     bullet_alive = True
 
 def update_bullet():
@@ -80,7 +288,7 @@ bullet2_x, bullet2_y, bullet2_alive = 0, 0, False
 
 ---
 
-# Bullet クラスを作る
+## ステップ4. Bullet クラスを作る
 
 サンプル: [game/bullet.py](game/bullet.py)
 
@@ -111,11 +319,11 @@ class Bullet():
     def __init__(self, rect):
         x = rect.x + 17
         y = rect.y - 10
-        self.image    = pg.image.load(IMG_DIR / "bullet.png")
-        self.rect     = self.image.get_rect()
+        self.image        = pg.image.load(IMG_DIR / "bullet.png")
+        self.rect         = self.image.get_rect()
         self.rect.topleft = (x, y)
-        self.vy       = -8
-        self.is_alive = True
+        self.vy           = -8
+        self.is_alive     = True
 
     def update(self):
         self.rect.y += self.vy
@@ -130,7 +338,7 @@ class Bullet():
 
 ---
 
-# リストで複数のインスタンスを管理する
+## ステップ5. リストで複数の弾を管理する
 
 サンプル: [game/gamecontrol.py](game/gamecontrol.py)
 
@@ -174,7 +382,7 @@ bullets = alive_bullets
 
 ---
 
-# Enemy クラスと継承
+## ステップ6. Enemy クラスと継承を作る
 
 サンプル: [game/enemy.py](game/enemy.py)
 
@@ -226,7 +434,12 @@ class Enemy():
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
-        ...  # HP バー描画
+        # HP バー
+        rect1 = pg.Rect(self.rect.x, self.rect.y - 20, 4, 20)
+        h     = (self.hp / self.maxhp) * 20
+        rect2 = pg.Rect(self.rect.x, self.rect.y - h, 4, h)
+        pg.draw.rect(screen, pg.Color("RED"),   rect1)
+        pg.draw.rect(screen, pg.Color("GREEN"), rect2)
 ```
 
 ```python
@@ -234,14 +447,14 @@ class FlameEnemy(Enemy):
     def __init__(self):
         super().__init__()
         self.image = pg.image.load(IMG_DIR / "enemy2.png")
-        self.vy    = random.uniform(5, 7)  # 速く落ちる
+        self.vy    = random.uniform(5, 7)   # 速く落ちる
 
 class IceEnemy(Enemy):
     def __init__(self):
         super().__init__()
         self.image = pg.image.load(IMG_DIR / "enemy3.png")
         self.maxhp = 150
-        self.hp    = 150  # HP が多い
+        self.hp    = 150                    # HP が多い
 ```
 
 ```python
@@ -260,7 +473,7 @@ class EnemyFactory():
 
 ---
 
-# GameManager にまとめる
+## ステップ7. GameManager にまとめる
 
 サンプル: [game/gamecontrol.py](game/gamecontrol.py)
 
@@ -272,14 +485,17 @@ class EnemyFactory():
 ```
 step1. GameManager クラスを定義する
          __init__ で player / enemies / bullets / status を初期化する
+
 step2. update(self) メソッドを作る
          player.update() を呼ぶ
          enemies と bullets のリストを for でまわして update() を呼ぶ
          一定フレームごとに factory.random_create() で敵を生成する
          弾と敵の衝突・敵とプレイヤーの衝突を判定する
          死んだ敵・弾をリストから取り除く
+
 step3. draw(self, screen) メソッドを作る
          bullets / enemies / player / status をまとめて draw() する
+
 step4. main.py からは game.update() と game.draw(screen) を呼ぶだけにする
 ```
 
@@ -292,6 +508,7 @@ class GameManager():
         self.player  = Player()
         self.enemies = []
         self.bullets = []
+        self.factory = EnemyFactory()
         self.status  = Status()
 
     def update(self):
@@ -324,11 +541,12 @@ while running:
 
 ---
 
-# Q1. 敵クラスを自分で作る
+## ステップ8. 敵の動きを関数で実装する
 
-## ステップ1 — 関数で書く
+敵の処理を**関数**で実装して動かしてみよう。  
+新しいファイルを作って、以下の手順で書いてみよう。
 
-`practice/q1_func.py` を新規作成して、敵の処理を**関数**で実装しよう。
+## やること
 
 ```
 step1. enemy_x / enemy_y / enemy_vy / enemy_alive 変数を定義する
@@ -394,9 +612,13 @@ while True:
 
 </details>
 
-## ステップ2 — クラスに書き直す
+---
 
-`practice/q1_class.py` を新規作成して、ステップ1 を `Enemy` クラスに書き直そう。
+## ステップ9. 敵クラスに書き直す
+
+ステップ6 の関数版を `Enemy` クラスに書き直して、複数の敵をリストで管理しよう。
+
+## やること
 
 ```
 step1. Enemy クラスを定義する
@@ -468,9 +690,11 @@ while True:
 
 ---
 
-# Q2. Status に経過時間を追加する
+## ステップ10. Status に経過時間を追加する
 
-`game/status.py` を開いて、`Status` クラスに**経過時間の表示**を追加しよう。
+[game/status.py](game/status.py) を開いて、`Status` クラスに**経過時間の表示**を追加しよう。
+
+## やること
 
 ```
 step1. reset(self) に self.time = 0 を追加する
@@ -488,12 +712,12 @@ step3. draw(self, screen) に経過秒数を表示する行を追加する
 def reset(self):
     self.distance = 0
     self.score    = 0
-    self.time     = 0    # 追加
+    self.time     = 0       # 追加
 
 def update(self, ntype):
     if ntype == "distance":
         self.distance += 2
-        self.time += 1   # 追加
+        self.time     += 1  # 追加
     if ntype == "score":
         self.score += 1
 

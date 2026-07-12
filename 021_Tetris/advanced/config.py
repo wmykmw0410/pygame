@@ -28,7 +28,7 @@ OVERLAY_ALPHA     = 160
 # 消去ライン数 → 点数 (0〜4ライン)
 SCORE_TABLE = [0, 100, 300, 500, 800]
 
-TETORIMINO_SHAPES = {
+TETRIMINO_SHAPES = {
     "I": {"shape": [[1, 1, 1, 1]],          "color": (0, 240, 240)},
     "O": {"shape": [[1, 1], [1, 1]],         "color": (240, 240, 0)},
     "T": {"shape": [[0, 1, 0], [1, 1, 1]],  "color": (160, 0, 240)},
