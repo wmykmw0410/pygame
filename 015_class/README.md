@@ -13,6 +13,7 @@
   - [Q2. キャラクタークラス](#q2-キャラクタークラス)
 - [継承](#継承)
   - [Q3. 敵クラスを継承で作る](#q3-敵クラスを継承で作る)
+- [次のステップ](#次のステップ)
 
 ---
 
@@ -181,8 +182,6 @@ for p in party:
 
 サンプル: [example/ex02.py](example/ex02.py)
 
-> pygame でのクラス活用は、[016_battle_game](../016_battle_game/README.md) で段階的に学べる。
-
 ## Q2. キャラクタークラス
 
 > 問題: [question/question2.py](question/question2.py) / 解答: [question/answer/answer2.py](question/answer/answer2.py)
@@ -239,3 +238,10 @@ for a in animals:
 ## Q3. 敵クラスを継承で作る
 
 > 問題: [question/question3.py](question/question3.py) / 解答: [question/answer/answer3.py](question/answer/answer3.py)
+
+---
+
+# 次のステップ
+
+Q3 で作った `Character` → `Enemy`（継承・`attack()` のオーバーライド）が、バトルゲームの土台になる。  
+[016_battle_game](../016_battle_game/README.md) では、まず Q3 のコードをそのまま pygame の画面に表示し、そこからパーティー化・反撃・連戦と段階的に拡張してバトルゲームを完成させる。

@@ -2,247 +2,176 @@
 クラスを使ってバトルゲームを段階的に作りましょう
 ```
 
-# 目次
-- [ステップ1: サンプルプログラムを確認する](#ステップ1-サンプルプログラムを確認する)
-- [ステップ2: Player クラスにまとめる](#ステップ2-player-クラスにまとめる)
-- [ステップ3: Character 基底クラスを作る](#ステップ3-character-基底クラスを作る)
-- [ステップ4: Enemy を派生させ、パーティーをリストで管理する](#ステップ4-enemy-を派生させパーティーをリストで管理する)
-- [ステップ5: 攻撃ターンを追加して完成させる](#ステップ5-攻撃ターンを追加して完成させる)
-- [ステップ6: 複数の敵と連戦する](#ステップ6-複数の敵と連戦する)
+[015_class](../015_class/README.md) の Q3 で作った `Character` → `Enemy` の継承・攻撃システムを、ここでは pygame の画面上で動かしながら拡張していく。
 
+# 目次
+- [フォントについて](#フォントについて)
+  - [Webからフォントを探す](#webからフォントを探す)
+- [ステップ1: CLI版をpygame化する](#ステップ1-cli版をpygame化する)
+- [ステップ2: パーティー化する](#ステップ2-パーティー化する)
+- [ステップ3: 攻撃ターンを追加して完成させる](#ステップ3-攻撃ターンを追加して完成させる)
+- [ステップ4: 複数の敵と連戦する](#ステップ4-複数の敵と連戦する)
 
 ---
 
-# ステップ1: サンプルプログラムを確認する
+# フォントについて
+
+`pg.font.Font(None, size)`（これまでのレッスンで使っていた既定フォント）は日本語のグリフを持っておらず、`"勇者"` のような日本語の名前を描画すると文字化けしてしまう。  
+そこでこのレッスンでは、日本語対応フォント（Noto Sans CJK JP）を [fonts/NotoSansCJKjp-Regular.otf](fonts/NotoSansCJKjp-Regular.otf) として同梱し、各サンプルの冒頭で読み込んでいる。
+
+```python
+from pathlib import Path
+
+FONT   = Path(__file__).resolve().parent.parent / "fonts" / "NotoSansCJKjp-Regular.otf"
+font   = pg.font.Font(FONT, 24)   # 名前など少し大きめの文字用
+font_s = pg.font.Font(FONT, 20)   # HP・メッセージなど小さめの文字用
+```
+
+| 項目 | 内容 |
+| --- | --- |
+| `Path(__file__).resolve().parent.parent` | サンプル自身（`example/exNN.py`）から見て1つ上の `016_battle_game/` フォルダ |
+| `pg.font.Font(FONT, size)` | ファイルパスを指定してフォントを読み込む（`None` を渡すと既定フォントになる） |
+| `font` / `font_s` | 同じフォントファイルからサイズ違いの2つの Font オブジェクトを作って使い分けている |
+
+## Webからフォントを探す
+
+自分のゲームで別のフォントを使いたいときは、無料で商用利用もできるフォント配布サイトから探すとよい。
+
+| サイト | 特徴 |
+| --- | --- |
+| [Google Fonts](https://fonts.google.com/) | 無料フォントが探せる定番サイト。ほとんどが OFL（オープンフォントライセンス）で商用利用も可能 |
+
+**日本語フォントを探すときの注意点**
+
+```
+1. Google Fonts の言語フィルタで「Japanese」を選ぶ
+     → 日本語のグリフ（文字の形状データ）を持つフォントだけに絞り込める
+2. 欧文フォント（Roboto など）は日本語のグリフを持っていないことが多い
+     → 日本語を表示すると文字化け（豆腐（□）や表示なし）になるので注意する
+```
+
+**ダウンロードしてから使うまでの手順**
+
+```
+step1. サイトから .ttf または .otf ファイルをダウンロードする
+step2. プロジェクトの fonts フォルダに置く（このレッスンでは 016_battle_game/fonts/）
+step3. Path(__file__).resolve().parent.parent / "fonts" / "ファイル名" でパスを指定する
+step4. pg.font.Font(FONT, サイズ) で読み込む
+```
+
+> フォントには著作権があるため、配布・商用利用が可能かライセンスを必ず確認すること。
+
+
+# ステップ1: CLI版をpygame化する
 
 サンプル: [example/ex01.py](example/ex01.py)
 
-プレイヤーを**関数**だけで管理すると、人数が増えるほど変数がどんどん増えていく。  
-関数版のサンプルを確認して、この問題を体感しよう。  
-実装はステップ2から始める。
-
-```python
-name1, hp1, color1 = "勇者",    100, pg.Color("ROYALBLUE")
-name2, hp2, color2 = "魔法使い",  70, pg.Color("PURPLE")
-name3, hp3, color3 = "戦士",    130, pg.Color("FIREBRICK")
-
-
-def draw_player(name, cx, color, hp):
-    rect = pg.Rect(cx - 30, 200, 60, 60)
-    pg.draw.rect(screen, color, rect)
-    name_s = font.render(name, True, WHITE)
-    screen.blit(name_s, name_s.get_rect(centerx=cx, bottom=194))
-    hp_s = font_s.render(f"HP: {hp}", True, WHITE)
-    screen.blit(hp_s, hp_s.get_rect(centerx=cx, top=266))
-
-
-while True:
-    ...
-    if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
-        hp1 -= 10
-        hp2 -= 10
-        hp3 -= 10
-
-    draw_player(name1, 100, color1, hp1)
-    draw_player(name2, 300, color2, hp2)
-    draw_player(name3, 500, color3, hp3)
-```
-
-4人目が加わったら？ → 変数と呼び出しがさらに増える。
-
-→ 「1人分のデータと処理」をひとまとめにできれば、何人でも同じコードで扱えるはず。
-
----
-
-# ステップ2: Player クラスにまとめる
-
-サンプル: [example/ex02.py](example/ex02.py)
-
-ここから実装していく。ステップ1の変数と関数を `Player` クラスに集約する。  
-→ 勇者1人分のデータと処理を1つのオブジェクトにまとめて描画する。
+[015_class](../015_class/README.md) の Q3 で作った `Character`・`Enemy` クラスを、そのまま pygame の画面に表示してみよう。  
+クラスの中身は変えず、`print()` の代わりに画面へ描画する。SPACE キーを押すたびに1ターン進む。
 
 ## やること
 
 ```
-step1. Player クラスを定義する
-         __init__(self, name, cx, color, hp)
-           self.name  = name
-           self.hp    = hp
-           self.rect  = pg.Rect(cx - 30, 200, 60, 60)
-           self.color = color
+step1. Character・Enemy クラスは Q3 と同じものを使う
+         attack(self, target) は print() の代わりにメッセージを return する
+         （画面に表示するために文字列として受け取れるようにする）
 
-step2. take_damage(self, amount) メソッドを作る
-         self.hp -= amount
-         0 未満にはならないようにする
+step2. hero = Character("勇者", attack_power=30)
+       boss = Enemy("ラスボス", attack_power=15)
+         Q3 と同じ2体で戦わせる
 
-step3. draw(self) メソッドを作る
-         四角・名前・HP を描画する（ステップ1の draw_player と同じ内容）
+step3. SPACE キーが押されたら1ターン進める
+         hero.attack(boss) を実行し、boss が倒れていなければ boss.attack(hero) を実行する
+         勝敗がついたら game_over = True にする
 
-step4. 勇者のインスタンスを1つ作る
-         hero = Player("勇者", 300, pg.Color("ROYALBLUE"), hp=100)
-
-step5. SPACE キーが押されたら hero に 10 ダメージを与える
-         hero.take_damage(10)
-
-step6. hero を描画する
-         hero.draw()
+step4. 名前・HP・メッセージをテキストとして画面に描画する
 ```
 
 <details>
 <summary>コードを見る</summary>
 
 ```python
-class Player():
-    def __init__(self, name, cx, color, hp):
-        self.name  = name
-        self.hp    = hp
-        self.rect  = pg.Rect(cx - 30, 200, 60, 60)
-        self.color = color
-
-    def take_damage(self, amount):
-        self.hp -= amount
-        if self.hp < 0:
-            self.hp = 0
-
-    def draw(self):
-        pg.draw.rect(screen, self.color, self.rect)
-        name_s = font.render(self.name, True, WHITE)
-        screen.blit(name_s, name_s.get_rect(centerx=self.rect.centerx, bottom=self.rect.top - 6))
-        hp_s = font_s.render(f"HP: {self.hp}", True, WHITE)
-        screen.blit(hp_s, hp_s.get_rect(centerx=self.rect.centerx, top=self.rect.bottom + 6))
-
-
-hero = Player("勇者", 300, pg.Color("ROYALBLUE"), hp=100)
-
-while True:
-    ...
-    if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
-        hero.take_damage(10)
-
-    hero.draw()
-```
-
-</details>
-
----
-
-# ステップ3: Character 基底クラスを作る
-
-サンプル: [example/ex03.py](example/ex03.py)
-
-`Player` の中身を先に `Character` 基底クラスとしてまとめ、`Player(Character)` として派生させる。  
-→ 次のステップで `Enemy` も同じ `Character` から派生させる準備をする。
-
-## やること
-
-```
-step1. Character 基底クラスを定義する
-         __init__(self, name, hp)
-           self.name = name
-           self.hp   = hp
-         is_alive(self): return self.hp > 0
-         take_damage(self, amount): self.hp -= amount（0未満にはならないようにする）
-
-step2. Player(Character) に書き直す
-         super().__init__(name, hp) で親の初期化を呼ぶ
-         Player 固有の属性だけを __init__ に追加する
-           self.rect  = pg.Rect(cx - 30, 200, 60, 60)
-           self.color = color
-         is_alive() / take_damage() は Character から継承されるので削除する
-
-step3. draw(self) メソッドを直す
-         is_alive() が False なら GRAY で描画するようにする
-
-step4. 勇者のインスタンスを1つ作る
-         hero = Player("勇者", 300, pg.Color("ROYALBLUE"), hp=100)
-         SPACE キーで hero.take_damage(10) を呼び、ステップ2と同じ挙動になることを確認する
-```
-
-<details>
-<summary>コードを見る</summary>
-
-```python
+# 015_class の Q3 とまったく同じクラス（print の代わりにメッセージを返す）
 class Character():
-    def __init__(self, name, hp):
-        self.name = name
-        self.hp   = hp
+    def __init__(self, name, attack_power):
+        self.name         = name
+        self.hp           = 100
+        self.attack_power = attack_power
+
+    def attack(self, target):
+        target.hp -= self.attack_power
+        return f"{self.name}の攻撃! {target.name}に{self.attack_power}ダメージ!"
 
     def is_alive(self):
         return self.hp > 0
 
-    def take_damage(self, amount):
-        self.hp -= amount
-        if self.hp < 0:
-            self.hp = 0
+
+class Enemy(Character):
+    def __init__(self, name, attack_power):
+        super().__init__(name, attack_power)
+        self.hp = 150
+
+    def attack(self, target):
+        dmg = int(self.attack_power * 1.5)
+        target.hp -= dmg
+        return f"{self.name}の攻撃! {target.name}に{dmg}ダメージ!"
 
 
-class Player(Character):
-    def __init__(self, name, cx, color, hp):
-        super().__init__(name, hp)   # ← Character の __init__ を呼ぶ
-        self.rect  = pg.Rect(cx - 30, 200, 60, 60)
-        self.color = color
+hero = Character("勇者", attack_power=30)
+boss = Enemy("ラスボス", attack_power=15)
 
-    # is_alive() / take_damage() は Character から継承 → 書かなくてよい
-
-    def draw(self):
-        if self.is_alive():
-            color = self.color
-        else:
-            color = pg.Color("GRAY")
-        pg.draw.rect(screen, color, self.rect)
-        name_s = font.render(self.name, True, WHITE)
-        screen.blit(name_s, name_s.get_rect(centerx=self.rect.centerx, bottom=self.rect.top - 6))
-        hp_s = font_s.render(f"HP: {self.hp}", True, WHITE)
-        screen.blit(hp_s, hp_s.get_rect(centerx=self.rect.centerx, top=self.rect.bottom + 6))
-
-
-hero = Player("勇者", 300, pg.Color("ROYALBLUE"), hp=100)
+message   = "SPACE: 攻撃"
+game_over = False
 
 while True:
     ...
-    if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
-        hero.take_damage(10)
-
-    hero.draw()
+    if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and not game_over:
+        message = hero.attack(boss)
+        if not boss.is_alive():
+            message = f"{boss.name}をたおした! {hero.name}の勝利!"
+            game_over = True
+        else:
+            message = boss.attack(hero)
+            if not hero.is_alive():
+                message = f"{hero.name}は倒れた… {boss.name}の勝利!"
+                game_over = True
 ```
 
 </details>
 
 ---
 
-# ステップ4: Enemy を派生させ、パーティーをリストで管理する
+# ステップ2: パーティー化する
 
-サンプル: [example/ex04.py](example/ex04.py)
+サンプル: [example/ex02.py](example/ex02.py)
 
-ステップ3の `Character` から `Enemy` も派生させ、`Player` と共通の基底クラスを持たせる。  
-→ 基底クラス → 複数の派生クラスという構造を身につける。  
-また、ステップ3では勇者1人だけだったプレイヤーを、パーティー（複数人）のリストにする。
+勇者1人 vs ラスボス1体だった戦いを、3人のパーティー vs 敵1体に拡張する。  
+見た目（四角形・色）を持たせるため、ステップ1では `Character` をそのまま使っていた勇者を `Player(Character)` として新しく定義し、`rect`・`color` を追加する。  
+攻撃も `character.attack(target)` メソッドは使わず、メインループ側でダメージを計算して `take_damage()` を呼ぶ形に変える。ダメージにはランダムな幅も持たせる。
 
 ## やること
 
 ```
-step1. Player(Character) に attack 属性を追加する
-         __init__ に self.attack = attack を追加する
+step1. Character に take_damage(self, amount) を追加する
+         self.hp -= amount（0未満にはならないようにする）
+         → attack(self, target) メソッドは使わず、メインループ側でダメージを計算して take_damage() を呼ぶ形に変える
 
-step2. パーティーをリストで作る
+step2. Player(Character) を作る
+         __init__ に rect・color・attack（攻撃力）を追加する
+         draw(self) でキャラ画像の代わりに四角形・名前・HPを描画する（倒れたら GRAY）
+
+step3. Enemy(Character) にも rect・color を追加し、draw(self) を作る
+
+step4. パーティーをリストで作る
          party = [Player("勇者", 100, ..., attack=25),
                   Player("魔法使い", 300, ..., attack=35),
                   Player("戦士", 500, ..., attack=20)]
-         勇者1人だけだったステップ3から、複数人をリストで管理できるようにする
 
-step3. Enemy(Character) を定義する
-         super().__init__(name, hp) で親の初期化を呼ぶ
-         Enemy 固有の属性だけを __init__ に追加する
-           self.rect  = pg.Rect(270, 50, 60, 60)
-           self.color = pg.Color("DARKGREEN")
-         is_alive() は Character から継承されるので書かなくてよい
-         draw(self): 四角・名前・HP を描画する（倒れたら GRAY）
-
-step4. SPACE キーが押されたときの攻撃処理を実装する
+step5. SPACE キーが押されたときの攻撃処理を実装する
          生存しているプレイヤーを alive リストに集める（for p in party: if p.is_alive(): ...）
          random.choice(alive) でランダムに1人選ぶ
          dmg = random.randint(attack-5, attack+5) でダメージを計算する
-         enemy.hp -= dmg で HP を減らす
+         enemy.take_damage(dmg) で HP を減らす
          message を更新する
 ```
 
@@ -250,6 +179,7 @@ step4. SPACE キーが押されたときの攻撃処理を実装する
 <summary>コードを見る</summary>
 
 ```python
+# ── ex01 との違い: Character に take_damage() を追加し、Player/Enemy は見た目(rect/color)を持つ ──
 class Character():
     def __init__(self, name, hp):
         self.name = name
@@ -258,20 +188,20 @@ class Character():
     def is_alive(self):
         return self.hp > 0
 
-
-class Player(Character):
-    def __init__(self, name, cx, color, hp, attack):
-        super().__init__(name, hp)   # ← Character の __init__ を呼ぶ
-        self.attack = attack
-        self.rect   = pg.Rect(cx - 30, 230, 60, 60)
-        self.color  = color
-
-    # is_alive() は Character から継承 → 書かなくてよい
-
     def take_damage(self, amount):
         self.hp -= amount
         if self.hp < 0:
             self.hp = 0
+
+
+class Player(Character):
+    def __init__(self, name, cx, color, hp, attack):
+        super().__init__(name, hp)
+        self.attack = attack
+        self.rect   = pg.Rect(cx - 30, 230, 60, 60)
+        self.color  = color
+
+    # is_alive() / take_damage() は Character から継承
 
     def draw(self):
         if self.is_alive():
@@ -284,20 +214,22 @@ class Player(Character):
 
 class Enemy(Character):
     def __init__(self, name, hp):
-        super().__init__(name, hp)   # ← Character の __init__ を呼ぶ
+        super().__init__(name, hp)
         self.rect  = pg.Rect(270, 50, 60, 60)
         self.color = pg.Color("DARKGREEN")
 
-    # is_alive() は Character から継承 → 書かなくてよい
+    # is_alive() / take_damage() は Character から継承
 
     def draw(self):
-        if self.is_alive():
-            color = self.color
-        else:
-            color = pg.Color("GRAY")
-        pg.draw.rect(screen, color, self.rect)
         ...
 
+
+enemy = Enemy("スライム", 80)
+party = [
+    Player("勇者",    100, pg.Color("ROYALBLUE"), hp=100, attack=25),
+    Player("魔法使い", 300, pg.Color("PURPLE"),    hp=70,  attack=35),
+    Player("戦士",    500, pg.Color("FIREBRICK"), hp=130, attack=20),
+]
 
 # SPACE キーで攻撃
 alive = []
@@ -307,9 +239,7 @@ for p in party:
 
 attacker = random.choice(alive)
 dmg = random.randint(attacker.attack - 5, attacker.attack + 5)
-enemy.hp -= dmg
-if enemy.hp < 0:
-    enemy.hp = 0
+enemy.take_damage(dmg)   # ← Character から継承したメソッドを使う
 message = f"{attacker.name}の攻撃! {dmg}ダメージ!"
 ```
 
@@ -317,21 +247,20 @@ message = f"{attacker.name}の攻撃! {dmg}ダメージ!"
 
 ---
 
-# ステップ5: 攻撃ターンを追加して完成させる
+# ステップ3: 攻撃ターンを追加して完成させる
 
-サンプル: [example/ex05.py](example/ex05.py)
+サンプル: [example/ex03.py](example/ex03.py)
 
-ステップ4に**敵の反撃**と**全滅チェック**を追加して完成。  
+ステップ2に**敵の反撃**と**全滅チェック**を追加して完成。  
 メッセージをリストで管理して複数行を表示できるようにする。  
-また、`max_hp` と `take_damage()` を `Character` に移し、`Enemy` も `Player` と同じ基底クラスから継承する形に直す。
+また、`max_hp` を `Character` に追加し、`Enemy` にも `attack` を持たせて反撃できるようにする。
 
 ## やること
 
 ```
-step1. Character に max_hp と take_damage() を追加する
+step1. Character に max_hp を追加する
          __init__ に self.max_hp = hp を追加する
-         take_damage(self, amount): self.hp -= amount（0未満にはならないようにする）
-         → Enemy・Player 共通のダメージ処理として使えるようにする
+         → is_alive() / take_damage() と同様、Enemy・Player 共通の属性として使えるようにする
 
 step2. Player・Enemy の draw() を "HP: xx / max_hp" 形式に変える
          hp_s = font_s.render(f"HP: {self.hp} / {self.max_hp}", ...)
@@ -393,7 +322,7 @@ class Player(Character):
         ...
 
 
-# ── ex04 との違い: Enemy も Character(Player と同じ基底クラス)から派生させた ──
+# ── ex02 との違い: attack を追加して反撃できるようにした ──
 class Enemy(Character):
     def __init__(self, name, hp, attack):
         super().__init__(name, hp)   # ← Character の __init__ を呼ぶ
@@ -458,9 +387,9 @@ for i, msg in enumerate(show_msgs):
 
 ---
 
-# ステップ6: 複数の敵と連戦する
+# ステップ4: 複数の敵と連戦する
 
-サンプル: [example/ex06.py](example/ex06.py)
+サンプル: [example/ex04.py](example/ex04.py)
 
 スライムを倒したら**ドラゴン**が現れる連戦システムを追加する。  
 `enemy_queue` で戦う順序を管理し、Enemy クラスに `color` と `size` を追加して見た目を変える。
@@ -492,7 +421,7 @@ step4. メッセージ内の敵名をハードコードから enemy.name に変�
 <summary>コードを見る</summary>
 
 ```python
-# ── ex05 との違い: color / size を引数で受け取れるようにした ──
+# ── ex03 との違い: color / size を引数で受け取れるようにした ──
 class Enemy(Character):
     def __init__(self, name, hp, attack, color="DARKGREEN", size=70):
         super().__init__(name, hp)   # ← Character の __init__ を呼ぶ
@@ -504,10 +433,7 @@ class Enemy(Character):
     # is_alive() / take_damage() は Character から継承 → 書かなくてよい
 
     def draw(self):
-        if self.is_alive():
-            color = self.color
-        else:
-            color = pg.Color("GRAY")
+        color = self.color if self.is_alive() else pg.Color("GRAY")
         ...
 
 
@@ -529,4 +455,3 @@ if not enemy.is_alive():
 ```
 
 </details>
-
