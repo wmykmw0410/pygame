@@ -11,8 +11,8 @@
 ## 進捗
 
 ### 準備
-- [ ] 00_setup — 環境構築
-- [ ] 00_sample_game — サンプルゲーム体験
+- [ ] 000_setup — 環境構築
+- [ ] 000_sample_game — サンプルゲーム体験
 
 ### pygame 入門
 - [ ] 001_window — ウィンドウ作成・ゲームループ
@@ -79,8 +79,6 @@
   - [ ] ex01
   - [ ] ex02
   - [ ] ex03
-  - [ ] ex04
-  - [ ] ex05
 - [ ] 017_BreakoutClone_class_ver — クラス化練習（ブロック崩し）
   - [ ] ex01
   - [ ] ex02
@@ -104,6 +102,18 @@
 
 ### 発展
 - [ ] 021_Tetris — テトリス
+- [ ] 022_sprite — Sprite / Group によるオブジェクト管理（023_super_mario の準備）
+  - [ ] ex01
+  - [ ] ex02
+  - [ ] ex03
+  - [ ] ex04
+- [ ] 023_super_mario — スーパーマリオ
+- [ ] 024_regex_battle — 正規表現（re モジュール）を使った呪文詠唱バトル
+  - [ ] ex01
+  - [ ] ex02
+  - [ ] ex03
+  - [ ] ex04
+  - [ ] ex05
 
 ---
 
@@ -113,8 +123,8 @@
 
 | フォルダ | 概要 | リンク |
 | --- | --- | --- |
-| 00_setup | Python・pygame の環境構築 | [README](00_setup/README.md) |
-| 00_sample_game | 完成ゲームを動かして全体像をつかむ | — |
+| 000_setup | Python・pygame の環境構築 | [README](000_setup/README.md) |
+| 000_sample_game | 完成ゲームを動かして全体像をつかむ | — |
 
 ### pygame 入門
 
@@ -145,7 +155,7 @@
 | フォルダ | テーマ | 概要 | リンク |
 | --- | --- | --- | --- |
 | 015_class | OOP 基礎 | クラス・インスタンス・メソッド・継承 | [README](015_class/README.md) |
-| 016_battle_game | OOP 実践 | バトルゲームを関数版→クラス版へ段階的に実装する | [README](016_battle_game/README.md) |
+| 016_battle_game | OOP 実践 | 015_class の CLI 版を pygame 化し、パーティー化・反撃・連戦へ拡張する | [README](016_battle_game/README.md) |
 | 017_BreakoutClone_class_ver | OOP 練習① | ブロック崩しを関数ベース→クラスへ段階的に書き直す | [README](017_BreakoutClone_class_ver/README.md) |
 | 018_shooting_game_class_ver | OOP 練習② | シューティングゲームを段階的にクラス化する | [README](018_shooting_game_class_ver/README.md) |
 | 019_module | モジュール | モジュール・パッケージ・標準ライブラリ・相対インポート | [README](019_module/README.md) |
@@ -156,12 +166,16 @@
 | フォルダ | テーマ | 概要 | リンク |
 | --- | --- | --- | --- |
 | 021_Tetris | テトリス | ゼロからテトリスを段階的に実装するハンズオン | [README](021_Tetris/README.md) |
+| 022_sprite | Sprite / Group | 敵キャラをランダムに動かし、壁や敵同士で跳ね返らせる。キーボードで Group への追加・削除・全削除を操作する（023_super_mario の準備） | [README](022_sprite/README.md) |
+| 023_super_mario | スーパーマリオ | 横スクロールアクションの実装（準備中） | — |
+| 024_regex_battle | 正規表現 | re モジュールを使った呪文詠唱バトル（タイピング×正規表現） | [README](024_regex_battle/README.md) |
 
 ### 補足
 
 | フォルダ | 内容 |
 | --- | --- |
+| [vscode_basics.md](vscode_basics.md) | VSCode の使い方リファレンス |
 | [python_basics.md](python_basics.md) | Python 基本文法リファレンス |
 | [002_draw_shapes/color_code.md](002_draw_shapes/color_code.md) | カラーコード一覧（色名・RGB・RGBA） |
 | [005_event_process/keycode.md](005_event_process/keycode.md) | キーコード一覧（定数・数値） |
-| 00_assets | 共通の画像・サウンド素材 |
+| 000_assets | 共通の画像・サウンド素材 |

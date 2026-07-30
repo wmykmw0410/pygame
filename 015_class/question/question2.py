@@ -7,8 +7,8 @@ Character クラスを作って、2体のキャラクターを戦わせよう。
 ・is_alive() → hp > 0 なら True を返す
 
 戦闘の流れ:
-1. hero = Character("勇者", attack_power=30) を作る
-2. demon = Character("魔王", attack_power=20) を作る
+1. player = Character("勇者", attack_power=30) を作る
+2. enemy = Character("スライム", attack_power=20) を作る
 3. どちらかの is_alive() が False になるまで交互に attack() を呼ぶ
 4. 倒したほうを表示する
 """

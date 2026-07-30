@@ -11,8 +11,8 @@ step2. attack() をオーバーライドする
        ・攻撃結果を表示する
 
 step3. 以下で戦わせる
-       ・hero = Character("勇者", attack_power=30)
-       ・boss = Enemy("ラスボス", attack_power=15)
+       ・player = Character("勇者", attack_power=30)
+       ・enemy  = Enemy("スライム", attack_power=15)
 """
 
 # Character クラスを定義する（Q2 と同じ）

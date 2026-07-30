@@ -12,15 +12,15 @@ class Character():
         return self.hp > 0
 
 
-hero  = Character("勇者", attack_power=30)
-demon = Character("魔王", attack_power=20)
+player = Character("勇者", attack_power=30)
+enemy  = Character("スライム", attack_power=20)
 
-while hero.is_alive() and demon.is_alive():
-    hero.attack(demon)
-    if demon.is_alive():
-        demon.attack(hero)
+while player.is_alive() and enemy.is_alive():
+    player.attack(enemy)
+    if enemy.is_alive():
+        enemy.attack(player)
 
-if hero.is_alive():
-    print(f"{hero.name}の勝利!")
+if player.is_alive():
+    print(f"{player.name}の勝利!")
 else:
-    print(f"{demon.name}の勝利!")
+    print(f"{enemy.name}の勝利!")

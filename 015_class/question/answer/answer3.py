@@ -23,15 +23,15 @@ class Enemy(Character):
         print(f"{self.name}の攻撃! {target.name}に{dmg}ダメージ!(残りHP: {target.hp})")
 
 
-hero = Character("勇者", attack_power=30)
-boss = Enemy("ラスボス", attack_power=15)
+player = Character("勇者", attack_power=30)
+enemy = Enemy("スライム", attack_power=15)
 
-while hero.is_alive() and boss.is_alive():
-    hero.attack(boss)
-    if boss.is_alive():
-        boss.attack(hero)
+while player.is_alive() and enemy.is_alive():
+    player.attack(enemy)
+    if enemy.is_alive():
+        enemy.attack(player)
 
-if hero.is_alive():
-    print(f"{hero.name}の勝利!")
+if player.is_alive():
+    print(f"{player.name}の勝利!")
 else:
-    print(f"{boss.name}の勝利!")
+    print(f"{enemy.name}の勝利!")

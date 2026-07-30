@@ -7,10 +7,10 @@
 # 目次
 - [フォントについて](#フォントについて)
   - [Webからフォントを探す](#webからフォントを探す)
+- [テキストの位置合わせ（get_rect）](#テキストの位置合わせ（get_rect）)
 - [ステップ1: CLI版をpygame化する](#ステップ1-cli版をpygame化する)
-- [ステップ2: パーティー化する](#ステップ2-パーティー化する)
-- [ステップ3: 攻撃ターンを追加して完成させる](#ステップ3-攻撃ターンを追加して完成させる)
-- [ステップ4: 複数の敵と連戦する](#ステップ4-複数の敵と連戦する)
+- [ステップ2: パーティー化して完成させる](#ステップ2-パーティー化して完成させる)
+- [ステップ3: 複数の敵と連戦する](#ステップ3-複数の敵と連戦する)
 
 ---
 
@@ -62,41 +62,109 @@ step4. pg.font.Font(FONT, サイズ) で読み込む
 > フォントには著作権があるため、配布・商用利用が可能かライセンスを必ず確認すること。
 
 
+# テキストの位置合わせ（get_rect）
+
+`font.render()` で作った文字列の Surface をそのまま `screen.blit(text_s, (x, y))` すると、`(x, y)` は Surface の**左上**の座標になる。  
+しかし HP やメッセージは表示するたびに文字数が変わるため、`(x, y)` を決め打ちすると文字数が変わるたびに見た目の中心がずれてしまう。
+
+**具体例: 座標を決め打ちすると起きる問題**
+
+```python
+# ❌ 左上の座標を決め打ちしている
+hp_s = font.render(f"HP: {self.hp}", True, WHITE)
+screen.blit(hp_s, (270, 300))
+```
+
+`"HP: 100"` と `"HP: 8"` では横幅が違う（Surface のサイズが変わる）。左上の座標を固定しているので、HP が減って桁数が減ると、テキストの見た目の中心が左にずれて見える。
+
+**解決策: get_rect()**
+
+`Surface.get_rect(**kwargs)` は、その Surface と同じサイズの `Rect` を返すメソッド。キーワード引数で `centerx` や `top` などを指定すると、その位置に合わせて配置された `Rect` を返してくれる。
+
+```python
+name_s = font.render(self.name, True, WHITE)
+screen.blit(name_s, name_s.get_rect(centerx=self.rect.centerx, bottom=self.rect.top - 6))
+```
+
+これは、実質的に次のコードを1行にまとめたものと同じ。
+
+```python
+rect = name_s.get_rect()          # Surface と同じサイズの Rect を作る（位置は (0, 0)）
+rect.centerx = self.rect.centerx  # centerx だけ書き換える
+rect.bottom  = self.rect.top - 6  # bottom だけ書き換える
+screen.blit(name_s, rect)
+```
+
+| キーワード引数 | 意味 |
+| --- | --- |
+| `centerx=x` | Rect の水平方向の中心を x に合わせる |
+| `centery=y` | Rect の垂直方向の中心を y に合わせる |
+| `top=y` / `bottom=y` | Rect の上端 / 下端を y に合わせる |
+| `left=x` / `right=x` | Rect の左端 / 右端を x に合わせる |
+| `center=(x, y)` | 中心を (x, y) に合わせる |
+| `topleft=(x, y)` など | `bottomleft` / `topright` / `bottomright` のように角の座標をペアで指定することもできる |
+
+`centerx`（横方向）と `bottom`（縦方向）のように**別の軸**のキーワードなら自由に組み合わせられる。  
+逆に `center` と `centerx` のように**同じ軸**を重ねて指定すると、後から適用された方が優先されて意図しない結果になるため、同じ軸は1つだけ指定する。
+
+このレッスンでは、キャラクターの `rect`（四角形）を基準にして、名前は `rect` の少し上（`bottom=self.rect.top - 6`）、HPは少し下（`top=self.rect.bottom + 6`）に、横方向は中心を揃えて（`centerx=self.rect.centerx`）表示している。  
+`get_rect()` に座標を渡しているだけで、名前や HP の文字列の長さそのものは意識しなくてよい。
+
+
 # ステップ1: CLI版をpygame化する
 
 サンプル: [example/ex01.py](example/ex01.py)
 
 [015_class](../015_class/README.md) の Q3 で作った `Character`・`Enemy` クラスを、そのまま pygame の画面に表示してみよう。  
-クラスの中身は変えず、`print()` の代わりに画面へ描画する。SPACE キーを押すたびに1ターン進む。
+ダメージ計算や HP 判定のロジックは Q3 と同じまま、`print()` の代わりにメッセージを `return` して画面へ描画する。  
+画面には HP を別途テキストで表示するため、メッセージ内の `(残りHP: ...)` の表記は省略している。  
+画面に描画するために `rect`・`color` を `Character` に追加し、名前・HP のテキストに加えて `pg.draw.rect()` で四角形も表示する。  
+SPACE キーを押すたびに1ターン進む。
 
 ## やること
 
 ```
-step1. Character・Enemy クラスは Q3 と同じものを使う
-         attack(self, target) は print() の代わりにメッセージを return する
-         （画面に表示するために文字列として受け取れるようにする）
+step1. Character に rect・color を追加する
+         __init__(self, name, attack_power, rect, color) にする
+         attack(self, target) はダメージ計算はそのまま、print() の代わりにメッセージを return する
+         （残りHPは画面に別表示するので、メッセージ文からは省く）
+         is_alive(self) は Q3 と同じまま変えない
 
-step2. hero = Character("勇者", attack_power=30)
-       boss = Enemy("ラスボス", attack_power=15)
-         Q3 と同じ2体で戦わせる
+step2. Enemy(Character) の __init__ も rect・color を受け取り、super() に渡す
+         super().__init__(name, attack_power, rect, color)
 
-step3. SPACE キーが押されたら1ターン進める
-         hero.attack(boss) を実行し、boss が倒れていなければ boss.attack(hero) を実行する
+step3. player_rect = pg.Rect(270, 230, 60, 60)
+       enemy_rect = pg.Rect(0, 40, 70, 70) → centerx を 300 にする
+         player = Character("勇者", attack_power=30, rect=player_rect, color=pg.Color("ROYALBLUE"))
+         enemy = Enemy("スライム", attack_power=15, rect=enemy_rect, color=pg.Color("DARKGREEN"))
+         → 敵の名前は次のステップ以降も「スライム」で登場するので、ここで合わせておく
+
+step4. SPACE キーが押されたら1ターン進める
+         player.attack(enemy) を実行し、enemy が倒れていなければ enemy.attack(player) を実行する
          勝敗がついたら game_over = True にする
+         → 1ターンで player と enemy 両方が攻撃するので、message とは別に sub_message も用意し、
+           2つの攻撃結果を両方とも受け取れるようにする（片方だけ書き換えると、もう片方の攻撃が
+           画面に表示されないまま消えてしまう）
 
-step4. 名前・HP・メッセージをテキストとして画面に描画する
+step5. 名前・HP・メッセージをテキストとして画面に描画する
+         message・sub_message をそれぞれ font_s.render() し、2行に分けて表示する
+
+step6. player.rect・enemy.rect を使って pg.draw.rect() で四角形を描画する
+         is_alive() が False なら GRAY、生きていれば self.color で描く
 ```
 
 <details>
 <summary>コードを見る</summary>
 
 ```python
-# 015_class の Q3 とまったく同じクラス（print の代わりにメッセージを返す）
+# ── 015_class の Q3 との違い: 画面に描画するため rect・color を追加した ──
 class Character():
-    def __init__(self, name, attack_power):
+    def __init__(self, name, attack_power, rect, color):
         self.name         = name
         self.hp           = 100
         self.attack_power = attack_power
+        self.rect         = rect
+        self.color        = color
 
     def attack(self, target):
         target.hp -= self.attack_power
@@ -107,8 +175,8 @@ class Character():
 
 
 class Enemy(Character):
-    def __init__(self, name, attack_power):
-        super().__init__(name, attack_power)
+    def __init__(self, name, attack_power, rect, color):
+        super().__init__(name, attack_power, rect, color)
         self.hp = 150
 
     def attack(self, target):
@@ -117,73 +185,115 @@ class Enemy(Character):
         return f"{self.name}の攻撃! {target.name}に{dmg}ダメージ!"
 
 
-hero = Character("勇者", attack_power=30)
-boss = Enemy("ラスボス", attack_power=15)
+player_rect = pg.Rect(270, 230, 60, 60)
+enemy_rect  = pg.Rect(0, 40, 70, 70)
+enemy_rect.centerx = 300
 
-message   = "SPACE: 攻撃"
-game_over = False
+player = Character("勇者", attack_power=30, rect=player_rect, color=pg.Color("ROYALBLUE"))
+enemy  = Enemy("スライム", attack_power=15, rect=enemy_rect, color=pg.Color("DARKGREEN"))
+
+message     = "SPACE: 攻撃"
+sub_message = ""   # 1ターンで player と enemy 両方が攻撃するので、2行に分けて表示する
+game_over   = False
 
 while True:
     ...
     if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and not game_over:
-        message = hero.attack(boss)
-        if not boss.is_alive():
-            message = f"{boss.name}をたおした! {hero.name}の勝利!"
-            game_over = True
+        sub_message = player.attack(enemy)
+        if not enemy.is_alive():
+            message     = f"{enemy.name}をたおした! {player.name}の勝利!"
+            sub_message = ""
+            game_over   = True
         else:
-            message = boss.attack(hero)
-            if not hero.is_alive():
-                message = f"{hero.name}は倒れた… {boss.name}の勝利!"
-                game_over = True
+            message = enemy.attack(player)
+            if not player.is_alive():
+                message     = f"{player.name}は倒れた… {enemy.name}の勝利!"
+                sub_message = ""
+                game_over   = True
+
+    if player.is_alive():
+        color = player.color
+    else:
+        color = pg.Color("GRAY")
+    pg.draw.rect(screen, color, player.rect)
 ```
 
 </details>
 
 ---
 
-# ステップ2: パーティー化する
+# ステップ2: パーティー化して完成させる
 
 サンプル: [example/ex02.py](example/ex02.py)
 
-勇者1人 vs ラスボス1体だった戦いを、3人のパーティー vs 敵1体に拡張する。  
-見た目（四角形・色）を持たせるため、ステップ1では `Character` をそのまま使っていた勇者を `Player(Character)` として新しく定義し、`rect`・`color` を追加する。  
-攻撃も `character.attack(target)` メソッドは使わず、メインループ側でダメージを計算して `take_damage()` を呼ぶ形に変える。ダメージにはランダムな幅も持たせる。
+勇者1人 vs スライム1体だった戦いを、3人のパーティー vs 敵1体に拡張し、反撃・全滅チェック・メッセージ履歴を備えた完成形のバトルゲームに仕上げる。  
+`Character` は `rect`・`color` を `__init__` の引数で受け取る形をそのまま使う。共通の `attack()` は一旦なくし、代わりに `take_damage()`・`draw()`・`max_hp` を追加する。  
+攻撃はダメージにランダムな幅を持たせたいので、`Player`・`Enemy` それぞれに `attack(target)` メソッドを持たせ、その中で `random.randint()` でダメージを計算して `target.take_damage()` を呼ぶ形にする（ex01 と同じく `Enemy` も反撃する）。  
+描画処理 `draw()` は `Player`・`Enemy` どちらも中身が同じになるため、`take_damage()` と同様に `Character` にまとめて書き、両方に継承させる。  
+`attack` という名前は攻撃力(`attack_power`)とメソッド名(`attack()`)がかぶってしまうため、属性のほうは `attack_power` という名前にする。  
+1ターンで player・enemy・全滅チェックと複数の出来事が起こりうるので、メッセージは `messages` リストで管理し、直近3件を画面下部に表示する。
 
 ## やること
 
 ```
-step1. Character に take_damage(self, amount) を追加する
+step1. Character から attack(self, target) を取り除き、take_damage(self, amount) / max_hp を追加する
          self.hp -= amount（0未満にはならないようにする）
-         → attack(self, target) メソッドは使わず、メインループ側でダメージを計算して take_damage() を呼ぶ形に変える
+         self.max_hp = hp を __init__ に追加する
+         rect・color を __init__ で受け取る形はステップ1のまま変えない
 
-step2. Player(Character) を作る
-         __init__ に rect・color・attack（攻撃力）を追加する
-         draw(self) でキャラ画像の代わりに四角形・名前・HPを描画する（倒れたら GRAY）
+step2. Character に draw(self) も追加する
+         self.rect・self.color・self.name・self.hp・self.max_hp を使って
+         キャラ画像の代わりに四角形・名前・"HP: xx / max_hp" を描画する（倒れたら GRAY）
+         → draw() を Character に1つ書くだけで、Player・Enemy 両方が継承して使える
 
-step3. Enemy(Character) にも rect・color を追加し、draw(self) を作る
+step3. Player(Character) を作る
+         __init__ で rect を組み立て、super().__init__(name, hp, rect, color) で Character に渡す
+         attack_power（攻撃力）は Player 独自の属性として追加する
+         → self.attack という名前にすると、後で追加する attack() メソッドと名前がかぶってしまうので注意
+         is_alive() / take_damage() / draw() は Character から継承するので書かなくてよい
 
-step4. パーティーをリストで作る
-         party = [Player("勇者", 100, ..., attack=25),
-                  Player("魔法使い", 300, ..., attack=35),
-                  Player("戦士", 500, ..., attack=20)]
+step4. Player に attack(self, target) を追加する
+         dmg = random.randint(self.attack_power - 5, self.attack_power + 5) でダメージを計算する
+         target.take_damage(dmg) で相手の HP を減らす（Character から継承したメソッド）
+         メッセージ文字列を return する（ex01 の Character.attack() と同じ形）
 
-step5. SPACE キーが押されたときの攻撃処理を実装する
-         生存しているプレイヤーを alive リストに集める（for p in party: if p.is_alive(): ...）
-         random.choice(alive) でランダムに1人選ぶ
-         dmg = random.randint(attack-5, attack+5) でダメージを計算する
-         enemy.take_damage(dmg) で HP を減らす
-         message を更新する
+step5. Enemy(Character) にも attack_power と attack(self, target) を追加する
+         考え方は Player と同じだが、ダメージの幅は ±3 と Player（±5）より小さくする
+         → ex01 の Enemy と同じく反撃できるようにする
+
+step6. パーティーをリストで作る
+         party = [Player("勇者", 100, ..., attack_power=25),
+                  Player("魔法使い", 300, ..., attack_power=35),
+                  Player("戦士", 500, ..., attack_power=20)]
+
+step7. SPACE キーが押されたときの攻撃処理を実装する
+         messages = [] にして、生存しているプレイヤーを alive リストに集める
+         random.choice(alive) でランダムに1人選び、attacker.attack(enemy) の結果を messages に追加する
+         enemy が倒れたら "たおした!" を追加して game_over = True
+         enemy が生存していれば、別のランダムなプレイヤーを選んで enemy.attack(target) を呼び、結果を追加する
+
+step8. 全滅チェックを実装する
+         enemy の反撃で全員 is_alive() が False になったら、次に alive が空になって
+         random.choice(alive) がエラーになってしまう
+         → not any(p.is_alive() for p in party) で全滅を確認し、"パーティーは全滅した…" を追加して game_over = True
+         全滅していなければ "SPACE: 攻撃" を追加する
+
+step9. メッセージをリストで管理する
+         messages[-3:] を画面下部に for 文で表示する（直近3件だけ表示する）
 ```
 
 <details>
 <summary>コードを見る</summary>
 
 ```python
-# ── ex01 との違い: Character に take_damage() を追加し、Player/Enemy は見た目(rect/color)を持つ ──
+# ── ex01 との違い: Character 共通の attack() をやめ、take_damage() / draw() / max_hp を追加した ──
 class Character():
-    def __init__(self, name, hp):
-        self.name = name
-        self.hp   = hp
+    def __init__(self, name, hp, rect, color):
+        self.name   = name
+        self.hp     = hp
+        self.max_hp = hp
+        self.rect   = rect
+        self.color  = color
 
     def is_alive(self):
         return self.hp > 0
@@ -193,16 +303,6 @@ class Character():
         if self.hp < 0:
             self.hp = 0
 
-
-class Player(Character):
-    def __init__(self, name, cx, color, hp, attack):
-        super().__init__(name, hp)
-        self.attack = attack
-        self.rect   = pg.Rect(cx - 30, 230, 60, 60)
-        self.color  = color
-
-    # is_alive() / take_damage() は Character から継承
-
     def draw(self):
         if self.is_alive():
             color = self.color
@@ -210,169 +310,75 @@ class Player(Character):
             color = pg.Color("GRAY")
         pg.draw.rect(screen, color, self.rect)
         ...
-
-
-class Enemy(Character):
-    def __init__(self, name, hp):
-        super().__init__(name, hp)
-        self.rect  = pg.Rect(270, 50, 60, 60)
-        self.color = pg.Color("DARKGREEN")
-
-    # is_alive() / take_damage() は Character から継承
-
-    def draw(self):
+        hp_s = font_s.render(f"HP: {self.hp} / {self.max_hp}", True, WHITE)
         ...
 
 
-enemy = Enemy("スライム", 80)
+class Player(Character):
+    def __init__(self, name, cx, color, hp, attack_power):
+        rect = pg.Rect(cx - 30, 200, 60, 60)
+        super().__init__(name, hp, rect, color)   # ← Character の __init__ を呼ぶ
+        self.attack_power = attack_power
+
+    # is_alive() / take_damage() / draw() は Character から継承
+
+    def attack(self, target):
+        dmg = random.randint(self.attack_power - 5, self.attack_power + 5)
+        target.take_damage(dmg)   # ← Character から継承したメソッドを使う
+        return f"{self.name}の攻撃! {dmg}ダメージ!"
+
+
+# ── ex01 との違い: attack_power / attack() を追加して反撃できるようにした ──
+class Enemy(Character):
+    def __init__(self, name, hp, attack_power):
+        rect = pg.Rect(0, 40, 70, 70)
+        rect.centerx = 300
+        super().__init__(name, hp, rect, pg.Color("DARKGREEN"))   # ← Character の __init__ を呼ぶ
+        self.attack_power = attack_power
+
+    # is_alive() / take_damage() / draw() は Character から継承
+
+    def attack(self, target):
+        dmg = random.randint(self.attack_power - 3, self.attack_power + 3)
+        target.take_damage(dmg)
+        return f"{self.name}の反撃! {target.name}に{dmg}ダメージ!"
+
+
+enemy = Enemy("スライム", 80, 12)
 party = [
-    Player("勇者",    100, pg.Color("ROYALBLUE"), hp=100, attack=25),
-    Player("魔法使い", 300, pg.Color("PURPLE"),    hp=70,  attack=35),
-    Player("戦士",    500, pg.Color("FIREBRICK"), hp=130, attack=20),
+    Player("勇者",    100, pg.Color("ROYALBLUE"), hp=100, attack_power=25),
+    Player("魔法使い", 300, pg.Color("PURPLE"),    hp=70,  attack_power=35),
+    Player("戦士",    500, pg.Color("FIREBRICK"), hp=130, attack_power=20),
 ]
 
+messages  = ["スライムが現れた！", "SPACE: 攻撃"]
+game_over = False
+
 # SPACE キーで攻撃
+messages = []
+
 alive = []
 for p in party:
     if p.is_alive():
         alive.append(p)
 
 attacker = random.choice(alive)
-dmg = random.randint(attacker.attack - 5, attacker.attack + 5)
-enemy.take_damage(dmg)   # ← Character から継承したメソッドを使う
-message = f"{attacker.name}の攻撃! {dmg}ダメージ!"
-```
+messages.append(attacker.attack(enemy))   # ← Player の attack() を呼ぶ
 
-</details>
+if not enemy.is_alive():
+    messages.append("スライムをたおした!")
+    game_over = True
+else:
+    # 敵の反撃
+    target = random.choice(alive)
+    messages.append(enemy.attack(target))   # ← Enemy の attack() を呼ぶ
 
----
-
-# ステップ3: 攻撃ターンを追加して完成させる
-
-サンプル: [example/ex03.py](example/ex03.py)
-
-ステップ2に**敵の反撃**と**全滅チェック**を追加して完成。  
-メッセージをリストで管理して複数行を表示できるようにする。  
-また、`max_hp` を `Character` に追加し、`Enemy` にも `attack` を持たせて反撃できるようにする。
-
-## やること
-
-```
-step1. Character に max_hp を追加する
-         __init__ に self.max_hp = hp を追加する
-         → is_alive() / take_damage() と同様、Enemy・Player 共通の属性として使えるようにする
-
-step2. Player・Enemy の draw() を "HP: xx / max_hp" 形式に変える
-         hp_s = font_s.render(f"HP: {self.hp} / {self.max_hp}", ...)
-
-step3. Enemy(Character) に attack を追加する
-         __init__ に self.attack = attack を追加する
-         is_alive() / take_damage() は Character から継承されるので書かなくてよい
-
-step4. 敵の反撃を実装する
-         パーティーの攻撃後、enemy が生存していたら反撃する
-         random.choice(alive) でランダムなプレイヤーを選ぶ
-         edm = random.randint(enemy.attack-3, enemy.attack+3) でダメージ計算
-         target.take_damage(edm) で HP を減らす（Character から継承したメソッド）
-
-step5. 全滅チェックを実装する
-         全員 is_alive() が False なら "パーティーは全滅した…" を表示して game_over = True
-
-step6. メッセージをリストで管理する
-         messages = [] に append() で追加する
-         messages[-3:] を画面下部に for 文で表示する
-```
-
-<details>
-<summary>コードを見る</summary>
-
-```python
-class Character():
-    def __init__(self, name, hp):
-        self.name   = name
-        self.hp     = hp
-        self.max_hp = hp
-
-    def is_alive(self):
-        return self.hp > 0
-
-    def take_damage(self, amount):
-        self.hp -= amount
-        if self.hp < 0:
-            self.hp = 0
-
-
-class Player(Character):
-    def __init__(self, name, cx, color, hp, attack):
-        super().__init__(name, hp)   # ← Character の __init__ を呼ぶ
-        self.attack = attack
-        self.rect   = pg.Rect(cx - 30, 230, 60, 60)
-        self.color  = color
-
-    # is_alive() / take_damage() は Character から継承 → 書かなくてよい
-
-    def draw(self):
-        if self.is_alive():
-            color = self.color
-        else:
-            color = pg.Color("GRAY")
-        pg.draw.rect(screen, color, self.rect)
-        ...
-        hp_s = font_s.render(f"HP: {self.hp} / {self.max_hp}", True, WHITE)
-        ...
-
-
-# ── ex02 との違い: attack を追加して反撃できるようにした ──
-class Enemy(Character):
-    def __init__(self, name, hp, attack):
-        super().__init__(name, hp)   # ← Character の __init__ を呼ぶ
-        self.attack = attack
-        self.rect   = pg.Rect(0, 40, 70, 70)
-        self.rect.centerx = 300
-        self.color  = pg.Color("DARKGREEN")
-
-    # is_alive() / take_damage() は Character から継承 → 書かなくてよい
-
-    def draw(self):
-        if self.is_alive():
-            color = self.color
-        else:
-            color = pg.Color("GRAY")
-        pg.draw.rect(screen, color, self.rect)
-        ...
-        hp_s = font_s.render(f"HP: {self.hp} / {self.max_hp}", True, WHITE)
-        ...
-
-
-if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and not game_over:
-    messages = []
-
-    # パーティーの攻撃
-    alive = []
-    for p in party:
-        if p.is_alive():
-            alive.append(p)
-    attacker = random.choice(alive)
-    dmg = random.randint(attacker.attack - 5, attacker.attack + 5)
-    enemy.take_damage(dmg)   # ← Character から継承したメソッドを使う
-    messages.append(f"{attacker.name}の攻撃! {dmg}ダメージ!")
-
-    if not enemy.is_alive():
-        messages.append("スライムをたおした!")
+    # 全滅チェック（enemy の反撃で全員倒れたら、次の alive が空になってしまうため）
+    if not any(p.is_alive() for p in party):
+        messages.append("パーティーは全滅した…")
         game_over = True
     else:
-        # 敵の反撃
-        target = random.choice(alive)
-        edm = random.randint(enemy.attack - 3, enemy.attack + 3)
-        target.take_damage(edm)
-        messages.append(f"スライムの反撃! {target.name}に{edm}ダメージ!")
-
-        # 全滅チェック
-        if not any(p.is_alive() for p in party):
-            messages.append("パーティーは全滅した…")
-            game_over = True
-        else:
-            messages.append("SPACE: 攻撃")
+        messages.append("SPACE: 攻撃")
 
 # メッセージ表示
 show_msgs = messages[-3:]
@@ -387,9 +393,9 @@ for i, msg in enumerate(show_msgs):
 
 ---
 
-# ステップ4: 複数の敵と連戦する
+# ステップ3: 複数の敵と連戦する
 
-サンプル: [example/ex04.py](example/ex04.py)
+サンプル: [example/ex03.py](example/ex03.py)
 
 スライムを倒したら**ドラゴン**が現れる連戦システムを追加する。  
 `enemy_queue` で戦う順序を管理し、Enemy クラスに `color` と `size` を追加して見た目を変える。
@@ -398,43 +404,42 @@ for i, msg in enumerate(show_msgs):
 
 ```
 step1. Enemy に color と size 引数を追加する
-         __init__(self, name, hp, attack, color="DARKGREEN", size=70)
-           self.color = pg.Color(color)
-           self.rect  = pg.Rect(0, 40, size, size)
-         draw(self) はそのまま self.color を使う（変更不要）
+         __init__(self, name, hp, attack_power, color="DARKGREEN", size=70)
+           rect = pg.Rect(0, 40, size, size) を組み立てて super() に渡す
+           super().__init__(name, hp, rect, pg.Color(color))
+         draw(self) / attack(self, target) はそのまま self.color・self.name を使う（変更不要）
+         → attack() のメッセージはすでに self.name から組み立てているので、
+           ドラゴンに交代しても自動的に「ドラゴンの反撃!」になる
 
 step2. enemy_queue を用意する
          enemy_queue = [Enemy("ドラゴン", 200, 20, color="DARKRED", size=90)]
          enemy = Enemy("スライム", 80, 12)  ← 最初の敵はこれまで通り
 
 step3. 敵を倒したときの処理を変更する
-         enemy.is_alive() が False になったら f"{enemy.name}をたおした！" と表示する
+         enemy.is_alive() が False になったら f"{enemy.name}をたおした!" と表示する
          enemy_queue が空でなければ pop(0) で次の敵を取り出して enemy に代入する
          次の敵の名前で "〇〇が現れた！" を表示する
-         enemy_queue が空なら "全ての敵をたおした！" を表示して game_over = True
-
-step4. メッセージ内の敵名をハードコードから enemy.name に変える
-         "スライムの反撃!" → f"{enemy.name}の反撃!"
+         enemy_queue が空なら "全ての敵をたおした!" を表示して game_over = True
 ```
 
 <details>
 <summary>コードを見る</summary>
 
 ```python
-# ── ex03 との違い: color / size を引数で受け取れるようにした ──
+# ── ex02 との違い: color / size を引数で受け取れるようにした ──
 class Enemy(Character):
-    def __init__(self, name, hp, attack, color="DARKGREEN", size=70):
-        super().__init__(name, hp)   # ← Character の __init__ を呼ぶ
-        self.attack = attack
-        self.color  = pg.Color(color)
-        self.rect   = pg.Rect(0, 40, size, size)
-        self.rect.centerx = 300
+    def __init__(self, name, hp, attack_power, color="DARKGREEN", size=70):
+        rect = pg.Rect(0, 40, size, size)
+        rect.centerx = 300
+        super().__init__(name, hp, rect, pg.Color(color))   # ← Character の __init__ を呼ぶ
+        self.attack_power = attack_power
 
-    # is_alive() / take_damage() は Character から継承 → 書かなくてよい
+    # is_alive() / take_damage() / draw() は Character から継承 → 書かなくてよい
 
-    def draw(self):
-        color = self.color if self.is_alive() else pg.Color("GRAY")
-        ...
+    def attack(self, target):
+        dmg = random.randint(self.attack_power - 3, self.attack_power + 3)
+        target.take_damage(dmg)
+        return f"{self.name}の反撃! {target.name}に{dmg}ダメージ!"   # ← self.name なので敵が変わっても自動で対応
 
 
 enemy_queue = [
@@ -450,7 +455,7 @@ if not enemy.is_alive():
         messages.append(f"{enemy.name}が現れた！")
         messages.append("SPACE: 攻撃")
     else:
-        messages.append("全ての敵をたおした！")
+        messages.append("全ての敵をたおした!")
         game_over = True
 ```
 

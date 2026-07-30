@@ -1,6 +1,6 @@
 ```text
 pygameを動かすための環境を準備しましょう
-00_sample_game/ex01.py のサンプルが実行できたらセットアップ完了です
+000_sample_game/ex01.py のサンプルが実行できたらセットアップ完了です
 ```
 
 | ツール | バージョン |
@@ -68,7 +68,7 @@ pip --version
 
 | OS | 表示例 |
 | --- | --- |
-| Mac / Linux | `pip 24.x.x from .../pip (python 3.x)` |
+| Mac / Linux | `pip 25.x.x from .../pip (python 3.x)` |
 | Windows | 同上（表示されない場合は `py -m pip --version`） |
 
 ---
