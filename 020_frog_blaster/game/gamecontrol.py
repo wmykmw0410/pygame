@@ -2,6 +2,12 @@ import pygame as pg
 import random
 from . import player, enemy, bullet, status, sound
 
+BULLET_COOLDOWN        = 10
+ENEMY_SPAWN_INTERVAL   = 15
+BULLET_DAMAGE          = 50
+ENEMY_COLLISION_DAMAGE = 50
+CLEAR_SCORE            = 30
+
 class Subject:
     def __init__(self) -> None:
         self.observers = []
@@ -42,7 +48,7 @@ class GameManager(Subject):
 
         # 弾の発射
         self.bullet_count += 1
-        if self.bullet_count > 10:
+        if self.bullet_count > BULLET_COOLDOWN:
             key = pg.key.get_pressed()
             if key[pg.K_a]:
                 self.bullets.append(bullet.Bullet(self.player.rect))
@@ -56,7 +62,7 @@ class GameManager(Subject):
 
         # 敵の生成
         self.spawn_count += 1
-        if self.spawn_count > 15:
+        if self.spawn_count > ENEMY_SPAWN_INTERVAL:
             self.spawn_count = 0
             self.enemies.append(self.factory.random_create())
 
@@ -73,14 +79,14 @@ class GameManager(Subject):
                 if e.rect.colliderect(b.rect):
                     sound.SoundManager.get_instance().playattack()
                     dead_bullets.add(b)
-                    e.hp -= 50
+                    e.hp -= BULLET_DAMAGE
                     if e.hp <= 0:
                         self.notify("score")
                         effect = enemy.BombEffect(e.rect, self.effects)
                         sound.SoundManager.get_instance().playblast()
                         self.effects.append(effect)
                         dead_enemies.add(e)
-                        if self.status.score == 30:
+                        if self.status.score == CLEAR_SCORE:
                             self.is_playing = False
                             self.is_cleared = True
                             sound.SoundManager.get_instance().bgmstop()
@@ -96,7 +102,7 @@ class GameManager(Subject):
             if e not in dead_enemies and e.rect.colliderect(self.player.rect):
                 dead_enemies.add(e)
                 self.player.damage()
-                self.player.hp -= 50
+                self.player.hp -= ENEMY_COLLISION_DAMAGE
                 sound.SoundManager.get_instance().playbomb()
                 if self.player.hp <= 0:
                     self.is_playing = False

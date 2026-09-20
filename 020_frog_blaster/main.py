@@ -1,9 +1,12 @@
 import pygame as pg
 from game import GameManager, ResultScene
 
+WIDTH, HEIGHT = 600, 650
+FPS = 60
+
 def main():
     pg.init()
-    screen = pg.display.set_mode((600, 650))
+    screen = pg.display.set_mode((WIDTH, HEIGHT))
     pg.display.set_caption("Frog Blaster")
     clock = pg.time.Clock()
 
@@ -28,7 +31,7 @@ def main():
             result.draw(screen)
 
         pg.display.update()
-        clock.tick(60)
+        clock.tick(FPS)
 
     pg.quit()
 
