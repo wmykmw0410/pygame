@@ -7,16 +7,16 @@
 - [ファイル構成](#ファイル構成)
 - [設計の全体像](#設計の全体像)
 - [ステップ1. ウィンドウ表示を確認する](#ステップ1-ウィンドウ表示を確認する)
-- [ステップ2. PlayerState と IdleState を作る](#ステップ2-playerstate-と-idlestate-を作る)
-- [ステップ3. MovingState を追加する](#ステップ3-movingstate-を追加する)
-- [ステップ4. DamageState を追加する](#ステップ4-damagestate-を追加する)
-- [ステップ5. Player クラスを作る](#ステップ5-player-クラスを作る)
-- [ステップ6. Bullet クラスを作る](#ステップ6-bullet-クラスを作る)
-- [ステップ7. リストで複数の弾を管理する](#ステップ7-リストで複数の弾を管理する)
-- [ステップ8. Enemy クラスを作る](#ステップ8-enemy-クラスを作る)
-- [ステップ9. FlameEnemy と IceEnemy を継承で作る](#ステップ9-flameenemy-と-iceenemy-を継承で作る)
-- [ステップ10. EnemyFactory を作る](#ステップ10-enemyfactory-を作る)
-- [ステップ11. BombEffect クラスを作る](#ステップ11-bombeffect-クラスを作る)
+- [ステップ2. Player クラスを作る](#ステップ2-player-クラスを作る)
+- [ステップ3. Bullet クラスを作る](#ステップ3-bullet-クラスを作る)
+- [ステップ4. リストで複数の弾を管理する](#ステップ4-リストで複数の弾を管理する)
+- [ステップ5. Enemy クラスを作る](#ステップ5-enemy-クラスを作る)
+- [ステップ6. FlameEnemy と IceEnemy を継承で作る](#ステップ6-flameenemy-と-iceenemy-を継承で作る)
+- [ステップ7. EnemyFactory を作る](#ステップ7-enemyfactory-を作る)
+- [ステップ8. BombEffect クラスを作る](#ステップ8-bombeffect-クラスを作る)
+- [ステップ9. PlayerState と IdleState を作る](#ステップ9-playerstate-と-idlestate-を作る)
+- [ステップ10. MovingState を追加する](#ステップ10-movingstate-を追加する)
+- [ステップ11. DamageState を追加し、Player を State パターンに書き換える](#ステップ11-damagestate-を追加しplayer-を-state-パターンに書き換える)
 - [ステップ12. SoundManager を作る](#ステップ12-soundmanager-を作る)
 - [ステップ13. Observer パターンで Status を作る](#ステップ13-observer-パターンで-status-を作る)
 - [ステップ14. GameManager の骨組みを作る](#ステップ14-gamemanager-の骨組みを作る)
@@ -82,29 +82,32 @@ SoundManager ……… どこから呼んでも同じ1つのインスタンス�
 
 `GameManager` は毎フレーム `update()` で全オブジェクトを動かし衝突判定を行い、`draw()` でまとめて描画する。`main.py` はこの `GameManager` と `ResultScene` を呼ぶだけのシンプルな形になる（[ステップ19](#ステップ19-mainpy-を完成させる)）。
 
+まず素の `Player`・`Bullet`・`Enemy`・`GameManager` を組み上げてゲームを一通り動くようにしてから（ステップ2〜8）、その後で見た目や演出に関わるクラス設計パターンを1つずつ追加していく（ステップ9〜13）。
+
 このレッスンには、次の5つのクラス設計パターンが登場する。1つずつ、ステップの中で実際に手を動かしながら組み立てていく。
 
 | パターン | 使われている場所 | 目的 |
 | --- | --- | --- |
-| State（状態） | `Player`（ステップ2〜5） | 状態ごとに見た目・動きの処理を切り替える |
-| 継承 | `Enemy` 系（ステップ8〜9） | 共通処理を親クラスにまとめ、差分だけを子クラスで上書きする |
-| Factory（生成） | `EnemyFactory`（ステップ10） | オブジェクトの生成ロジックを1箇所にまとめる |
+| 継承 | `Enemy` 系（ステップ5〜6） | 共通処理を親クラスにまとめ、差分だけを子クラスで上書きする |
+| Factory（生成） | `EnemyFactory`（ステップ7） | オブジェクトの生成ロジックを1箇所にまとめる |
+| State（状態） | `Player`（ステップ9〜11） | 状態ごとに見た目・動きの処理を切り替える |
 | Singleton | `SoundManager`（ステップ12） | アプリ内で常に同じ1つのインスタンスを共有する |
 | Observer（通知） | `Subject` / `Status`（ステップ13） | 通知する側と受け取る側を疎結合にする |
 
 ## 動作確認のタイミング
 
 ほとんどのステップはクラスの一部分だけを作るので、その場では実行できない。  
-実際に `main.py` を動かして目で確認できるのは、次の4か所だけ。
+実際に `main.py` を動かして目で確認できるのは、次の5か所だけ。
 
 | チェックポイント | 確認できること |
 | --- | --- |
 | [ステップ1](#ステップ1-ウィンドウ表示を確認する) | 空のウィンドウが表示される |
-| [ステップ5](#ステップ5-player-クラスを作る) | カエルが表示され、← → で動かせる（アニメーション確認） |
-| [ステップ7](#ステップ7-リストで複数の弾を管理する) | A キーで弾を発射できる（まだ敵はいない） |
-| [ステップ19](#ステップ19-mainpy-を完成させる) | 敵・衝突判定・スコア・BGMまで含めて最初から最後まで通しで遊べる |
+| [ステップ2](#ステップ2-player-クラスを作る) | カエルが表示され、← → で動かせる（まだ静止画のまま） |
+| [ステップ4](#ステップ4-リストで複数の弾を管理する) | A キーで弾を発射できる（まだ敵はいない） |
+| [ステップ11](#ステップ11-damagestate-を追加しplayer-を-state-パターンに書き換える) | 動いている間は歩行アニメーションに切り替わる |
+| [ステップ19](#ステップ19-mainpy-を完成させる) | 敵・衝突判定・スコア・BGMまで含めて最初から最後まで通しで遊べる（被弾の見た目もここで確認できる） |
 
-それ以外のステップ（2〜4, 6, 8〜18, 20）は「まだ実行できないパーツを作っている」段階。焦らず、次のチェックポイントまで組み立てを進めよう。
+それ以外のステップ（3, 5〜10, 12〜18, 20）は「まだ実行できないパーツを作っている」段階。焦らず、次のチェックポイントまで組み立てを進めよう。
 
 ---
 
@@ -192,176 +195,12 @@ if __name__ == "__main__":
 
 ---
 
-## ステップ2. PlayerState と IdleState を作る
-
-記載先: [game/player.py](game/player.py)
-
-`Player` は「状態（ステート）」によって画像や動きを切り替える。  
-まず土台となる `PlayerState` 基底クラスと、待機中の `IdleState` から作ろう。
-
-## やること
-
-```
-step1. PlayerState 基底クラスを定義する
-         __init__(self, player) で player への参照と image を持つ
-         update(self) は派生クラスで上書きする（何もしない版を定義しておく）
-
-step2. IdleState(PlayerState) を作る
-         __init__ で待機中のカエル画像を読み込む
-         update() でキーが押されていたら MovingState を返す（次のステップで作る）
-         押されていなければ self を返す（状態を維持）
-```
-
-<details>
-<summary>コードを見る</summary>
-
-**step1.** PlayerState 基底クラスを定義する
-
-```python
-class PlayerState():
-    def __init__(self, player):
-        self.player = player
-        self.image  = None
-
-    def update(self):
-        pass
-```
-
-**step2.** IdleState(PlayerState) を作る
-
-```python
-class IdleState(PlayerState):
-    def __init__(self, player):
-        super().__init__(player)
-        self.image = pg.image.load(IMG_DIR / "kaeru1.png")
-
-    def update(self):
-        key = pg.key.get_pressed()
-        if key[pg.K_LEFT] or key[pg.K_RIGHT]:
-            return MovingState(self.player)
-        return self
-```
-
-</details>
-
----
-
-## ステップ3. MovingState を追加する
-
-記載先: [game/player.py](game/player.py)
-
-左右キーが押されている間、歩行アニメーションをする `MovingState` を作る。  
-アニメーションの切り替え間隔は `ANIM_FRAME_DELAY` という定数として `game/player.py` の先頭に定義する。
-
-## やること
-
-```
-step1. ファイルの先頭に ANIM_FRAME_DELAY を定義する
-         何フレームごとに次のコマに切り替えるかを表す
-
-step2. MovingState(PlayerState) を作る
-         __init__ で歩行アニメーション用の画像リストを読み込む
-         update() で ANIM_FRAME_DELAY を使ってアニメーション画像を切り替える
-         キーが離されたら IdleState を返す
-```
-
-<details>
-<summary>コードを見る</summary>
-
-**step1.** ANIM_FRAME_DELAY を定義する
-
-```python
-ANIM_FRAME_DELAY = 5
-```
-
-**step2.** MovingState(PlayerState) を作る
-
-```python
-class MovingState(PlayerState):
-    def __init__(self, player):
-        super().__init__(player)
-        self.images = [
-            pg.image.load(IMG_DIR / "kaeru1.png"),
-            pg.image.load(IMG_DIR / "kaeru2.png"),
-            pg.image.load(IMG_DIR / "kaeru3.png"),
-            pg.image.load(IMG_DIR / "kaeru4.png"),
-        ]
-        self.cnt    = 0
-        self.image  = self.images[0]
-
-    def update(self):
-        self.cnt  += 1
-        self.image = self.images[self.cnt // ANIM_FRAME_DELAY % len(self.images)]
-        key = pg.key.get_pressed()
-        if not (key[pg.K_LEFT] or key[pg.K_RIGHT]):
-            return IdleState(self.player)
-        return self
-```
-
-</details>
-
-※ `self.cnt // ANIM_FRAME_DELAY % len(self.images)` の `len(self.images)`（画像の枚数）は定数化していない。画像リストの長さそのものを使えば自動的に正しい枚数になるため、あえて `4` のような固定値にしていない。
-
----
-
-## ステップ4. DamageState を追加する
-
-記載先: [game/player.py](game/player.py)
-
-敵に当たったときの被弾状態 `DamageState` を作る。被弾状態が続くフレーム数も `game/player.py` の先頭に定数として追加する。
-
-## やること
-
-```
-step1. ファイルの先頭に DAMAGE_DURATION を定義する
-         被弾状態が続くフレーム数
-
-step2. DamageState(PlayerState) を作る
-         __init__ で被弾時の画像リストを読み込み、timeout に DAMAGE_DURATION を設定する
-         update() でタイムアウトカウントを減らす
-         0 になったら IdleState に戻る
-```
-
-<details>
-<summary>コードを見る</summary>
-
-**step1.** DAMAGE_DURATION を定義する
-
-```python
-DAMAGE_DURATION = 20
-```
-
-**step2.** DamageState(PlayerState) を作る
-
-```python
-class DamageState(PlayerState):
-    def __init__(self, player):
-        super().__init__(player)
-        self.images  = [pg.image.load(IMG_DIR / "kaeru5.png"),
-                        pg.image.load(IMG_DIR / "kaeru6.png")]
-        self.cnt     = 0
-        self.image   = self.images[0]
-        self.timeout = DAMAGE_DURATION
-
-    def update(self):
-        self.cnt    += 1
-        self.image   = self.images[self.cnt // ANIM_FRAME_DELAY % len(self.images)]
-        self.timeout -= 1
-        if self.timeout < 0:
-            return IdleState(self.player)
-        return self
-```
-
-</details>
-
----
-
-## ステップ5. Player クラスを作る
+## ステップ2. Player クラスを作る
 
 記載先: [game/player.py](game/player.py), [main.py](main.py)
 
-3つの状態クラスをまとめて使う `Player` 本体を作り、ステップ1の仮の main.py に組み込んで動かしてみよう。  
-プレイヤーのサイズ・初期位置・速度・HP・HPバーの見た目・画面幅も、`game/player.py` の先頭に定数としてまとめて定義する。
+`Player` 本体を作り、ステップ1の仮の main.py に組み込んで動かしてみよう。状態（State）による見た目の切り替えはまだ使わず、待機中の画像をそのまま表示するだけのシンプルな形にする。  
+プレイヤーのサイズ・初期位置・速度・HP・HPバーの見た目・画面幅は、`game/player.py` の先頭に定数としてまとめて定義する。
 
 ## やること
 
@@ -373,13 +212,13 @@ step1. ファイルの先頭に必要な定数を定義する
 
 step2. Player クラスを作る
          __init__ で self.reset() を呼ぶ
-         reset() で self.state = IdleState(self) にし、
+         reset() で待機中のカエル画像を self.image に直接読み込み、
            rect / speed / maxhp / hp をステップ1の定数から設定する
-         update() で self.state = self.state.update() を呼び、キー入力で左右移動する
+         update() でキー入力で左右移動する
            左右の移動範囲は WIDTH - PLAYER_SIZE を上限にする
          draw(self, screen) でキャラ画像と HP バーを描画する
            HPバーのサイズは HP_BAR_* を使う
-         damage() で self.state = DamageState(self) に切り替える
+         damage() はまだ何もしない（ステップ11で状態パターンに書き換える）
 
 step3. main.py に Player を追加する
          player = Player() でインスタンスを作る
@@ -412,14 +251,13 @@ class Player():
         self.reset()
 
     def reset(self):
-        self.state = IdleState(self)
+        self.image = pg.image.load(IMG_DIR / "kaeru1.png")
         self.rect  = pg.Rect(*PLAYER_START, PLAYER_SIZE, PLAYER_SIZE)
         self.speed = PLAYER_SPEED
         self.maxhp = PLAYER_MAX_HP
         self.hp    = PLAYER_MAX_HP
 
     def update(self):
-        self.state = self.state.update()
         key = pg.key.get_pressed()
         vx = 0
         if key[pg.K_RIGHT]:
@@ -431,7 +269,7 @@ class Player():
         self.rect.x += vx
 
     def draw(self, screen):
-        screen.blit(self.state.image, self.rect)
+        screen.blit(self.image, self.rect)
         # HP バー
         rect1 = pg.Rect(self.rect.x, self.rect.y - HP_BAR_OFFSET, HP_BAR_WIDTH, HP_BAR_HEIGHT)
         h     = (self.hp / self.maxhp) * HP_BAR_HEIGHT
@@ -440,7 +278,7 @@ class Player():
         pg.draw.rect(screen, pg.Color("GREEN"), rect2)
 
     def damage(self):
-        self.state = DamageState(self)
+        pass   # 見た目を変える処理はステップ11で追加する
 ```
 
 **step3.** main.py に Player を追加する（`main.py`）
@@ -479,13 +317,13 @@ def main():
 
 </details>
 
-▶ **動作確認**: ここまでで実行し、カエルが表示されて ← → キーで動かせること、動いている間はアニメーションすることを確認しよう（被弾状態は敵ができるまで確認できない）。
+▶ **動作確認**: ここまでで実行し、カエルが表示されて ← → キーで動かせることを確認しよう（まだ静止画のままで、歩行アニメーションや被弾の見た目はステップ11で追加する）。
 
 ※ この main.py はまだ仮の形。この後 Bullet・Enemy を追加し、最終的に `GameManager` を使う完成版に書き換える（[ステップ19](#ステップ19-mainpy-を完成させる)）。
 
 ---
 
-## ステップ6. Bullet クラスを作る
+## ステップ3. Bullet クラスを作る
 
 記載先: [game/bullet.py](game/bullet.py)
 
@@ -556,9 +394,9 @@ class Bullet():
 
 ---
 
-## ステップ7. リストで複数の弾を管理する
+## ステップ4. リストで複数の弾を管理する
 
-記載先: [main.py](main.py)（ステップ5の仮の main.py に追記する）
+記載先: [main.py](main.py)（ステップ2の仮の main.py に追記する）
 
 `Bullet()` を呼ぶたびに**独立した弾のインスタンス**が作られる。  
 リストに入れてループで処理すれば、何発でも同じコードで扱える。  
@@ -614,7 +452,7 @@ bullets = alive_bullets
 
 ---
 
-## ステップ8. Enemy クラスを作る
+## ステップ5. Enemy クラスを作る
 
 記載先: [game/enemy.py](game/enemy.py)
 
@@ -694,7 +532,7 @@ class Enemy():
 
 ---
 
-## ステップ9. FlameEnemy と IceEnemy を継承で作る
+## ステップ6. FlameEnemy と IceEnemy を継承で作る
 
 記載先: [game/enemy.py](game/enemy.py)
 
@@ -753,7 +591,7 @@ class IceEnemy(Enemy):
 
 ---
 
-## ステップ10. EnemyFactory を作る
+## ステップ7. EnemyFactory を作る
 
 記載先: [game/enemy.py](game/enemy.py)
 
@@ -787,7 +625,7 @@ class EnemyFactory():
 
 ---
 
-## ステップ11. BombEffect クラスを作る
+## ステップ8. BombEffect クラスを作る
 
 記載先: [game/enemy.py](game/enemy.py)
 
@@ -858,6 +696,217 @@ class BombEffect():
 </details>
 
 ※ `BombEffect` は自分では生成されない。誰が・いつ生成するかはステップ16（衝突判定）で扱う。
+
+---
+
+## ステップ9. PlayerState と IdleState を作る
+
+記載先: [game/player.py](game/player.py)
+
+`Player` は「状態（ステート）」によって画像や動きを切り替える。  
+まず土台となる `PlayerState` 基底クラスと、待機中の `IdleState` から作ろう。
+
+## やること
+
+```
+step1. PlayerState 基底クラスを定義する
+         __init__(self, player) で player への参照と image を持つ
+         update(self) は派生クラスで上書きする（何もしない版を定義しておく）
+
+step2. IdleState(PlayerState) を作る
+         __init__ で待機中のカエル画像を読み込む
+         update() でキーが押されていたら MovingState を返す（次のステップで作る）
+         押されていなければ self を返す（状態を維持）
+```
+
+<details>
+<summary>コードを見る</summary>
+
+**step1.** PlayerState 基底クラスを定義する
+
+```python
+class PlayerState():
+    def __init__(self, player):
+        self.player = player
+        self.image  = None
+
+    def update(self):
+        pass
+```
+
+**step2.** IdleState(PlayerState) を作る
+
+```python
+class IdleState(PlayerState):
+    def __init__(self, player):
+        super().__init__(player)
+        self.image = pg.image.load(IMG_DIR / "kaeru1.png")
+
+    def update(self):
+        key = pg.key.get_pressed()
+        if key[pg.K_LEFT] or key[pg.K_RIGHT]:
+            return MovingState(self.player)
+        return self
+```
+
+</details>
+
+---
+
+## ステップ10. MovingState を追加する
+
+記載先: [game/player.py](game/player.py)
+
+左右キーが押されている間、歩行アニメーションをする `MovingState` を作る。  
+アニメーションの切り替え間隔は `ANIM_FRAME_DELAY` という定数として `game/player.py` の先頭に定義する。
+
+## やること
+
+```
+step1. ファイルの先頭に ANIM_FRAME_DELAY を定義する
+         何フレームごとに次のコマに切り替えるかを表す
+
+step2. MovingState(PlayerState) を作る
+         __init__ で歩行アニメーション用の画像リストを読み込む
+         update() で ANIM_FRAME_DELAY を使ってアニメーション画像を切り替える
+         キーが離されたら IdleState を返す
+```
+
+<details>
+<summary>コードを見る</summary>
+
+**step1.** ANIM_FRAME_DELAY を定義する
+
+```python
+ANIM_FRAME_DELAY = 5
+```
+
+**step2.** MovingState(PlayerState) を作る
+
+```python
+class MovingState(PlayerState):
+    def __init__(self, player):
+        super().__init__(player)
+        self.images = [
+            pg.image.load(IMG_DIR / "kaeru1.png"),
+            pg.image.load(IMG_DIR / "kaeru2.png"),
+            pg.image.load(IMG_DIR / "kaeru3.png"),
+            pg.image.load(IMG_DIR / "kaeru4.png"),
+        ]
+        self.cnt    = 0
+        self.image  = self.images[0]
+
+    def update(self):
+        self.cnt  += 1
+        self.image = self.images[self.cnt // ANIM_FRAME_DELAY % len(self.images)]
+        key = pg.key.get_pressed()
+        if not (key[pg.K_LEFT] or key[pg.K_RIGHT]):
+            return IdleState(self.player)
+        return self
+```
+
+</details>
+
+※ `self.cnt // ANIM_FRAME_DELAY % len(self.images)` の `len(self.images)`（画像の枚数）は定数化していない。画像リストの長さそのものを使えば自動的に正しい枚数になるため、あえて `4` のような固定値にしていない。
+
+---
+
+## ステップ11. DamageState を追加し、Player を State パターンに書き換える
+
+記載先: [game/player.py](game/player.py)
+
+敵に当たったときの被弾状態 `DamageState` を作り、ステップ2で作った素の `Player` を、`PlayerState`（ステップ9〜10で作った状態クラス）を使う形に書き換える。ここで初めて `Player` が「状態（ステート）」で見た目と動きを切り替えるようになる。
+
+## やること
+
+```
+step1. ファイルの先頭に DAMAGE_DURATION を定義する
+         被弾状態が続くフレーム数
+
+step2. DamageState(PlayerState) を作る
+         __init__ で被弾時の画像リストを読み込み、timeout に DAMAGE_DURATION を設定する
+         update() でタイムアウトカウントを減らす
+         0 になったら IdleState に戻る
+
+step3. Player をステップ2のシンプル版から State パターンを使う形に書き換える
+         reset() で self.image の代わりに self.state = IdleState(self) を持つ
+         update() の先頭で self.state = self.state.update() を呼ぶ
+         draw(self, screen) は self.image の代わりに self.state.image を描画する
+         damage()（ステップ2ではまだ何もしていなかった）で self.state = DamageState(self) に切り替える
+```
+
+<details>
+<summary>コードを見る</summary>
+
+**step1.** DAMAGE_DURATION を定義する
+
+```python
+DAMAGE_DURATION = 20
+```
+
+**step2.** DamageState(PlayerState) を作る
+
+```python
+class DamageState(PlayerState):
+    def __init__(self, player):
+        super().__init__(player)
+        self.images  = [pg.image.load(IMG_DIR / "kaeru5.png"),
+                        pg.image.load(IMG_DIR / "kaeru6.png")]
+        self.cnt     = 0
+        self.image   = self.images[0]
+        self.timeout = DAMAGE_DURATION
+
+    def update(self):
+        self.cnt    += 1
+        self.image   = self.images[self.cnt // ANIM_FRAME_DELAY % len(self.images)]
+        self.timeout -= 1
+        if self.timeout < 0:
+            return IdleState(self.player)
+        return self
+```
+
+**step3.** Player を State パターンを使う形に書き換える
+
+```python
+class Player():
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.state = IdleState(self)
+        self.rect  = pg.Rect(*PLAYER_START, PLAYER_SIZE, PLAYER_SIZE)
+        self.speed = PLAYER_SPEED
+        self.maxhp = PLAYER_MAX_HP
+        self.hp    = PLAYER_MAX_HP
+
+    def update(self):
+        self.state = self.state.update()
+        key = pg.key.get_pressed()
+        vx = 0
+        if key[pg.K_RIGHT]:
+            vx =  self.speed
+        if key[pg.K_LEFT]:
+            vx = -self.speed
+        if self.rect.x + vx < 0 or self.rect.x + vx > WIDTH - PLAYER_SIZE:
+            vx = 0
+        self.rect.x += vx
+
+    def draw(self, screen):
+        screen.blit(self.state.image, self.rect)
+        # HP バー
+        rect1 = pg.Rect(self.rect.x, self.rect.y - HP_BAR_OFFSET, HP_BAR_WIDTH, HP_BAR_HEIGHT)
+        h     = (self.hp / self.maxhp) * HP_BAR_HEIGHT
+        rect2 = pg.Rect(self.rect.x, self.rect.y - h, HP_BAR_WIDTH, h)
+        pg.draw.rect(screen, pg.Color("RED"),   rect1)
+        pg.draw.rect(screen, pg.Color("GREEN"), rect2)
+
+    def damage(self):
+        self.state = DamageState(self)
+```
+
+</details>
+
+▶ **動作確認**: ここまでで実行し、← → キーで動いている間は歩行アニメーションに切り替わることを確認しよう（被弾状態はまだ `GameManager` が無く呼び出す手段が無いため、最後の通しプレイ（[ステップ19](#ステップ19-mainpy-を完成させる)）で確認する）。
 
 ---
 
@@ -1425,7 +1474,7 @@ class ResultScene():
 
 記載先: [main.py](main.py)
 
-ステップ1・5で作った仮の main.py を、`GameManager` と `ResultScene` を使う完成版に書き換える。  
+ステップ1・2で作った仮の main.py を、`GameManager` と `ResultScene` を使う完成版に書き換える。  
 画面サイズと FPS は `main.py` の先頭に定数として定義する。
 
 ## やること
