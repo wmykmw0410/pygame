@@ -20,16 +20,25 @@ def check_winner():
         if sum(board[i]) == size:  return 1
         if sum(board[i]) == -size: return -1
         # 縦
-        col = sum(board[r][i] for r in range(size))
+        col = 0
+        for r in range(size):
+            col += board[r][i]
         if col == size:  return 1
         if col == -size: return -1
     # 斜め
-    d1 = sum(board[i][i] for i in range(size))
-    d2 = sum(board[i][size - 1 - i] for i in range(size))
+    d1, d2 = 0, 0
+    for i in range(size):
+        d1 += board[i][i]
+        d2 += board[i][size - 1 - i]
     if d1 == size or d2 == size:  return 1
     if d1 == -size or d2 == -size: return -1
     # 引き分け
-    if all(board[r][c] != 0 for r in range(size) for c in range(size)):
+    empty = 0
+    for r in range(size):
+        for c in range(size):
+            if board[r][c] == 0:
+                empty += 1
+    if empty == 0:
         return "draw"
     return None
 

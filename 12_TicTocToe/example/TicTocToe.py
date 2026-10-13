@@ -12,13 +12,6 @@ screen_height = 600
 screen = pg.display.set_mode((screen_width, screen_height))
 pg.display.set_caption('ox ゲーム')
 
-# 色の設定
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-
 # 盤面の設定
 BOARD_SIZE = 3                            # 3x3マス
 CELL_SIZE = screen_width // BOARD_SIZE    # 1マスの大きさ(200)
@@ -45,8 +38,8 @@ number = 1  # 1: 〇、-1: ×
 # グリッド線の描画
 def draw_grid():
     for i in range(1, BOARD_SIZE):
-        pg.draw.line(screen, BLACK, (0, i * CELL_SIZE), (screen_width, i * CELL_SIZE), LINE_WIDTH)
-        pg.draw.line(screen, BLACK, (i * CELL_SIZE, 0), (i * CELL_SIZE, screen_height), LINE_WIDTH)
+        pg.draw.line(screen, pg.Color("BLACK"), (0, i * CELL_SIZE), (screen_width, i * CELL_SIZE), LINE_WIDTH)
+        pg.draw.line(screen, pg.Color("BLACK"), (i * CELL_SIZE, 0), (i * CELL_SIZE, screen_height), LINE_WIDTH)
 
 # ボードの描画
 def draw_board():
@@ -57,20 +50,20 @@ def draw_board():
             col = board[row_index][col_index]
             if col == 1:
                 center = (col_index * CELL_SIZE + center_offset, row_index * CELL_SIZE + center_offset)
-                pg.draw.circle(screen, RED, center, CIRCLE_RADIUS, LINE_WIDTH)
+                pg.draw.circle(screen, pg.Color("RED"), center, CIRCLE_RADIUS, LINE_WIDTH)
             elif col == -1:
-                pg.draw.line(screen, BLUE, (col_index * CELL_SIZE + MARK_MARGIN, row_index * CELL_SIZE + MARK_MARGIN),
+                pg.draw.line(screen, pg.Color("BLUE"), (col_index * CELL_SIZE + MARK_MARGIN, row_index * CELL_SIZE + MARK_MARGIN),
                              (col_index * CELL_SIZE + mark_far, row_index * CELL_SIZE + mark_far), LINE_WIDTH)
-                pg.draw.line(screen, BLUE, (col_index * CELL_SIZE + mark_far, row_index * CELL_SIZE + MARK_MARGIN),
+                pg.draw.line(screen, pg.Color("BLUE"), (col_index * CELL_SIZE + mark_far, row_index * CELL_SIZE + MARK_MARGIN),
                              (col_index * CELL_SIZE + MARK_MARGIN, row_index * CELL_SIZE + mark_far), LINE_WIDTH)
 
 # 文字描画用関数
 def draw_message(main_text, sub_text=None, main_pos=(200, 200), sub_pos=(100, 400)):
     """ 画面に文字を描画する """
-    main_img = font.render(main_text, True, BLACK, GREEN)
+    main_img = font.render(main_text, True, pg.Color("BLACK"), pg.Color("GREEN"))
     screen.blit(main_img, main_pos)
     if sub_text:
-        sub_img = font.render(sub_text, True, BLACK, GREEN)
+        sub_img = font.render(sub_text, True, pg.Color("BLACK"), pg.Color("GREEN"))
         screen.blit(sub_img, sub_pos)
 
 # 勝利／引き分けの確認
@@ -133,7 +126,7 @@ run = True
 while run:
 
     # 背景の塗りつぶし
-    screen.fill(WHITE)
+    screen.fill(pg.Color("WHITE"))
 
     # マウスの位置の取得
     mx, my = pg.mouse.get_pos()

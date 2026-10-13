@@ -79,7 +79,18 @@ empty   = []                             # 空リスト
 print(len(fruits))  # 出力: 3 (要素数)
 ```
 
-サンプル: [example/ex01.py](example/ex01.py)
+サンプル: [example/ex01.py](example/ex01.py)（ウィンドウは開かず、ターミナルに結果を表示する。リポジトリのルートで `python 11_multidimensional_list/example/ex01.py` のように実行する。実行のしかたは [03_linux_command](../03_linux_command/README.md)）
+
+練習: [practice/practice01.py](practice/practice01.py)（「# ★」の部分が空欄になっているので、サンプルを見ながら自分の手でコードを打ち込んで完成させよう）
+
+動いたら、書き換えてもう一度動かし、変化を確認する。実行する前に、結果を予想してみるとよい。
+
+| 試すこと | 確認すること |
+| --- | --- |
+| `fruits` の要素を増やす・減らす | `len(fruits)` が、要素の数のとおりに変わる |
+| `print(len(empty))` | `0`（要素が1つも無い） |
+| `print(len(mixed))` | `4`（型が違っても、要素は1つずつ数える） |
+| `print(fruits)` | `['apple', 'banana', 'cherry']`（文字列には引用符が付き、カンマ区切りで表示される） |
 
 > 問題: [question/question1.py](question/question1.py) / 解答: [question/answer/answer1.py](question/answer/answer1.py)
 
@@ -105,6 +116,14 @@ print(fruits[-2])  # 出力: banana (末尾から2番目)
 
 サンプル: [example/ex02.py](example/ex02.py)
 
+練習: [practice/practice02.py](practice/practice02.py)
+
+| 試すこと | 確認すること |
+| --- | --- |
+| `fruits[3]` | `IndexError: list index out of range`（要素が3つのとき、インデックスは `0`〜`2` まで） |
+| `fruits[-3]` / `fruits[-4]` | `apple`（末尾から3番目＝先頭）/ `IndexError`（範囲の外） |
+| `fruits[0] = "mango"` のあとに `print(fruits)` | `['mango', 'banana', 'cherry']`（リストは中身を書き換えられる） |
+
 > 問題: [question/question2.py](question/question2.py) / 解答: [question/answer/answer2.py](question/answer/answer2.py)
 
 ## スライス
@@ -121,6 +140,15 @@ print(numbers[::-1])  # 出力: [4, 3, 2, 1, 0]  (逆順)
 ```
 
 サンプル: [example/ex03.py](example/ex03.py)
+
+練習: [practice/practice03.py](practice/practice03.py)
+
+| 試すこと | 確認すること |
+| --- | --- |
+| `numbers[1:3]` → `numbers[0:10]` | `[0, 1, 2, 3, 4]`（範囲が長すぎてもエラーにならず、あるところまでを返す） |
+| `numbers[3:1]` / `numbers[5:]` | どちらも `[]`（空のリスト） |
+| `numbers[::2]` / `numbers[-2:]` / `numbers[1:-1]` | `[0, 2, 4]`（2つおき）/ `[3, 4]`（末尾の2つ）/ `[1, 2, 3]`（先頭と末尾を除く） |
+| `c = numbers[:]` のあと `c.append(9)` | `numbers` は `[0, 1, 2, 3, 4]` のまま、`c` だけが `[0, 1, 2, 3, 4, 9]` になる（スライスは新しいリストを作る） |
 
 > 問題: [question/question3.py](question/question3.py) / 解答: [question/answer/answer3.py](question/answer/answer3.py)
 
@@ -142,6 +170,17 @@ fruits.index("apple")       # 値のインデックスを返す
 
 サンプル: [example/ex04.py](example/ex04.py)
 
+練習: [practice/practice04.py](practice/practice04.py)
+
+| 試すこと | 確認すること |
+| --- | --- |
+| `fruits.remove("zzz")` | `ValueError: list.remove(x): x not in list`（無い値は削除できない） |
+| 空のリスト `[]` に `pop()` | `IndexError: pop from empty list` |
+| `fruits.index("zzz")` | `ValueError: 'zzz' is not in list` |
+| `fruits.insert(100, "x")` | エラーにならず、末尾に追加される |
+| `["a", "b", "a"]` に `remove("a")` | 最初の `"a"` だけが消える（`['b', 'a']`） |
+| `[3, "a", 1]` を `sort()` | `TypeError`（数字と文字列は、大小を比べられない） |
+
 > 問題: [question/question4.py](question/question4.py) / 解答: [question/answer/answer4.py](question/answer/answer4.py)
 
 ## for文との組み合わせ
@@ -159,6 +198,14 @@ for i, fruit in enumerate(fruits):
 ```
 
 サンプル: [example/ex05.py](example/ex05.py)
+
+練習: [practice/practice05.py](practice/practice05.py)
+
+| 試すこと | 確認すること |
+| --- | --- |
+| `for fruit in fruits:` → `fruits[::-1]` でくり返す | 逆順（`cherry`、`banana`、`apple`）に取り出される |
+| `fruits` を空のリスト `[]` にする | 取り出しは0回になり、何も表示されない（`---` だけが表示される） |
+| `print(f"{i}: {fruit}")` → `{i + 1}` | 番号が `1` から始まる（`1: apple`） |
 
 > 問題: [question/question5.py](question/question5.py) / 解答: [question/answer/answer5.py](question/answer/answer5.py)
 
@@ -298,6 +345,15 @@ matrix[0][1] = 99
 
 サンプル: [example/ex06.py](example/ex06.py)
 
+練習: [practice/practice06.py](practice/practice06.py)
+
+| 試すこと | 確認すること |
+| --- | --- |
+| `matrix[2][0]` → `matrix[0][1]` / `matrix[1][2]` | `2` / `6`（`[行][列]`、どちらも0始まり） |
+| `matrix[3][0]` / `matrix[0][3]` | どちらも `IndexError`（行も列も、`0`〜`2` まで） |
+| `matrix[-1][-1]` | `9`（最後の行の、最後の要素） |
+| `matrix[0][1] = 99` のあと `print(matrix)` | `[[1, 99, 3], [4, 5, 6], [7, 8, 9]]` |
+
 > 問題: [question/question8.py](question/question8.py) / 解答: [question/answer/answer8.py](question/answer/answer8.py)
 
 ## clear
@@ -309,6 +365,14 @@ matrix.clear()  # [] になる
 ```
 
 サンプル: [example/ex07.py](example/ex07.py)
+
+練習: [practice/practice07.py](practice/practice07.py)
+
+| 試すこと | 確認すること |
+| --- | --- |
+| `print(num_list.clear())` | `None`（`clear()` は、リストを空にするだけで、戻り値は無い） |
+| `clear` のあとに `len(num_list)` | `0` |
+| 二次元リスト（例: `[[1, 2], [3, 4]]`）を `clear` | `[]`（行ごと、全部なくなる） |
 
 ## sort
 
@@ -322,6 +386,14 @@ numbers.sort(reverse=True)   # 降順: [5, 4, 3, 1, 1]
 
 サンプル: [example/ex08.py](example/ex08.py)
 
+練習: [practice/practice08.py](practice/practice08.py)
+
+| 試すこと | 確認すること |
+| --- | --- |
+| `y = num_list.sort()` | `y` は `None`、`num_list` は `[1, 2, 3]`（`sort()` は、元のリストを並び替えて、戻り値は無い） |
+| 文字列のリスト（`["banana", "apple", "cherry"]`）を `sort` | アルファベット順（`['apple', 'banana', 'cherry']`）になる |
+| `y = sorted(num_list)` | `y` が新しい並び替え済みのリストになり、`num_list` は `[2, 1, 3]` のまま |
+
 > 問題: [question/question9.py](question/question9.py) / 解答: [question/answer/answer9.py](question/answer/answer9.py)
 
 ## reverse
@@ -334,6 +406,14 @@ numbers.reverse()  # [3, 2, 1]
 ```
 
 サンプル: [example/ex09.py](example/ex09.py)
+
+練習: [practice/practice09.py](practice/practice09.py)
+
+| 試すこと | 確認すること |
+| --- | --- |
+| `print(num_list.reverse())` | `None`（`reverse()` も、元のリストを並び替えて、戻り値は無い） |
+| `reverse` を2回続けて呼ぶ | 元の `[2, 1, 3]` に戻る |
+| `y = num_list[::-1]` | `y` は `[3, 1, 2]`、`num_list` は `[2, 1, 3]` のまま（スライスは新しいリストを作る） |
 
 > 問題: [question/question10.py](question/question10.py) / 解答: [question/answer/answer10.py](question/answer/answer10.py)
 
@@ -350,7 +430,33 @@ for row in matrix:
 
 サンプル: [example/ex10.py](example/ex10.py)
 
+練習: [practice/practice10.py](practice/practice10.py)
+
+| 試すこと | 確認すること |
+| --- | --- |
+| `for` の中で `print(type(row))` | `<class 'list'>`（取り出されるのは、一次元のリスト） |
+| 行の長さを変える（`[[1], [2, 3], [4, 5, 6]]`） | `[1]`、`[2, 3]`、`[4, 5, 6]` と、1行ずつそのまま取り出せる |
+| 行を1つ足す（`[10, 11, 12]`） | 足した行も表示される（行の数だけくり返す） |
+
 for文を2つネストすると全要素を1つずつ取り出す
+
+```python
+for row in matrix:
+    for element in row:
+        print(element)
+```
+
+サンプル: [example/ex11.py](example/ex11.py)
+
+練習: [practice/practice11.py](practice/practice11.py)
+
+| 試すこと | 確認すること |
+| --- | --- |
+| 内側の `for` の中に `print("---")`（字下げを揃える） | 要素の数（9回）表示される |
+| その `print("---")` の字下げを1段浅くして、外側の `for` の中に置く | 行の数（3回）表示される。字下げで、どちらのくり返しの中に入るかが決まる |
+| `matrix` を2行×4列にする | 全要素（8個）を取り出せる |
+
+要素番号（行・列）も使いたいときは、`range` と `len` でくり返す
 
 ```python
 for i in range(len(matrix)):
@@ -358,7 +464,16 @@ for i in range(len(matrix)):
         print(f"matrix[{i}][{j}] = {matrix[i][j]}")
 ```
 
-サンプル: [example/ex11.py](example/ex11.py) / [example/ex12.py](example/ex12.py)
+サンプル: [example/ex12.py](example/ex12.py)
+
+練習: [practice/practice12.py](practice/practice12.py)
+
+| 試すこと | 確認すること |
+| --- | --- |
+| 行の長さをそろえない（`[[1, 2], [3, 4, 5], [6]]`） | 各行の長さは `2`・`3`・`1` と表示され、全要素を取り出せる（行ごとに `len(matrix[i])` を調べているため） |
+| 2行×3列にして `matrix[i][j]` → `matrix[j][i]` | `IndexError`（`i` と `j` の意味が入れ替わり、存在しない行を指してしまう） |
+| `range(len(matrix[i]))` → `range(len(matrix[0]))`、`matrix = [[1, 2, 3], [4]]` | `IndexError`（2行目は列が1つしか無いのに、3列分くり返してしまう） |
+| `matrix.append([10, 11, 12])` | `len(matrix)` が `4` になる |
 
 > 問題: [question/question11.py](question/question11.py) / 解答: [question/answer/answer11.py](question/answer/answer11.py)
 

@@ -18,8 +18,6 @@ from pathlib import Path
 p = Path("test.txt")  # パスを表すオブジェクトが作られる
 ```
 
-サンプル: [pathlib_module.py](pathlib_module.py)
-
 ---
 
 # pygameでの使用方法
@@ -36,6 +34,8 @@ player_rect = player_img.get_rect(topleft=(x, y))
 ```
 
 `/` 演算子でパスを結合できる
+
+[04_draw_images](../04_draw_images/README.md) のように `"04_draw_images/images/car.png"` と文字列で書くと、実行するフォルダ（作業ディレクトリ）が違うだけで画像が見つからなくなる。`Path(__file__)`（このファイルの場所）を基準にしておけば、どのフォルダから実行しても同じ画像を読み込める。
 
 ---
 
@@ -77,3 +77,17 @@ PARENT_DIR = Path(__file__).resolve().parent.parent  # /home/user
 PARENT_DIR  = Path(__file__).resolve().parents[1]  # 1つ上: /home/user
 GRANDPARENT = Path(__file__).resolve().parents[2]  # 2つ上: /home
 ```
+
+サンプル: [pathlib_module.py](pathlib_module.py)
+
+練習: [practice01.py](practice01.py)（「# ★」の部分が空欄になっているので、サンプルを見ながら自分の手でコードを打ち込んで完成させよう）
+
+動いたら、書き換えてもう一度動かし、変化を確認する。
+
+| 試すこと | 確認すること |
+| --- | --- |
+| `print(CURRENT_DIR)` | 絶対パス（`/` から始まる、ファイルの場所）が表示される |
+| `.parent` → `.parent.parent`（`BASE_DIR` を表示） | 1つ上のフォルダ（`pygame` フォルダ）になる。`images` フォルダが無いので、画像の読み込みでエラーになる |
+| `.parents[0]` / `.parents[1]` / `.parents[2]` を表示 | `[0]` は `.parent` と同じ（ファイルのあるフォルダ）、`[1]` は1つ上、`[2]` は2つ上のフォルダ |
+| `IMG_DIR / "car.png"` → `IMG_DIR / "nothing.png"` | `FileNotFoundError`（`No such file or directory: '.../images/nothing.png'`）。存在しないファイルは読み込めない |
+| `08_pathlib_module` フォルダへ `cd` してから、`python practice01.py` | 画像は表示される。`BASE_DIR` は実行した場所ではなく、ファイルの場所が基準だから |

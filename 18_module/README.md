@@ -11,7 +11,7 @@
   - [モジュール分割](#モジュール分割)
 - [__name__ == "__main__"](#__name__--__main__)
 - [パッケージの作り方](#パッケージの作り方)
-  - [相対インポート（`.`）](#相対インポート（）)
+  - [相対インポート（`.`）](#相対インポート)
 - [補足](#補足)
   - [モジュールの属性を調べる](#モジュールの属性を調べる)
   - [ゲームのパッケージ化](#ゲームのパッケージ化)
@@ -92,6 +92,17 @@ random.randint(1, 6)      # 1 以上 6 以下の整数乱数
 random.choice(["a", "b"]) # リストからランダムに1つ選ぶ
 ```
 
+練習: [example/ex_module/practice_random.py](example/ex_module/practice_random.py)（「# ★」の部分が空欄になっているので、サンプルを見ながら自分の手でコードを打ち込んで完成させよう）
+
+動いたら、書き換えてもう一度動かし、変化を確認する。
+
+| 変えるもの | 確認すること |
+| --- | --- |
+| 何度か実行し直す | 表示される値が毎回変わる（`random()` は小数、`randint()` は整数、`choice()` はリストの中から1つ） |
+| `random.randint(1, 6)` → `random.randint(1, 100)` | 1〜100の範囲の整数が出る（2000回試して、最小が `1`、最大が `100`） |
+| `import random` の下に `random.seed(1)` を足す | 何度実行し直しても、毎回同じ値になる（`0.13436424411240122`、`1`、`small luck`）。`seed()` の数を変えると、別の決まった並びになる |
+| `fortune_slip` に `"excellent luck"` を足す | 何度も実行すると、足した値も選ばれる |
+
 ## time
 
 サンプル: [example/ex_module/ex_time.py](example/ex_module/ex_time.py)
@@ -109,6 +120,15 @@ time.sleep(1)
 print(3)
 ```
 
+練習: [example/ex_module/practice_time.py](example/ex_module/practice_time.py)
+
+| 変えるもの | 確認すること |
+| --- | --- |
+| `time.sleep(5)` → `time.sleep(1)` | `start` と `end` の間隔が約1秒になる（測ると 1.02 秒） |
+| `time.sleep(5)` → `time.sleep(0.5)` | 小数も使える。間隔が約0.5秒になる（測ると 0.53 秒） |
+| カウントの `time.sleep(1)` → `time.sleep(2)` | 数字が2秒おきに出る（`1` → 2秒後に `2` → 2秒後に `3`） |
+| カウントの `time.sleep(1)` の行を全部消す | `1`、`2`、`3` が待たずに、一瞬で表示される |
+
 ## datetime
 
 サンプル: [example/ex_module/ex_datetime.py](example/ex_module/ex_datetime.py)
@@ -120,6 +140,14 @@ today = datetime.date.today()       # 今日の日付
 now   = datetime.datetime.now()     # 現在の日時
 print(now.hour, now.minute, now.second)
 ```
+
+練習: [example/ex_module/practice_datetime.py](example/ex_module/practice_datetime.py)
+
+| 変えるもの | 確認すること |
+| --- | --- |
+| `print(d.hour)` → `d.year` / `d.month` / `d.day` | 実行した日の年・月・日の数字が表示される（2026年10月14日に実行すると `2026` / `10` / `14`） |
+| `print(today)` → `print(today.strftime("%Y/%m/%d"))` | `2026/10/14` のように、`/` 区切りの形で表示される。`strftime()` の中の文字で、表示の形を決められる |
+| `print(d)` だけを書く | `2026-10-14 00:17:41.705480` のように、日付と時刻（小数点以下の秒まで）が1行で表示される |
 
 ## Q1. ジャンケンゲーム
 
@@ -155,6 +183,16 @@ import greeting1  # → "Hello" がすぐ出力される
 
 </details>
 
+練習: [example/ex01/practice01_result.py](example/ex01/practice01_result.py)（`practice01_greeting.py` と `practice01_result.py` の2つに書く。実行するのは `practice01_result.py`）
+
+動いたら、書き換えてもう一度動かし、変化を確認する。
+
+| 変えるもの | 確認すること |
+| --- | --- |
+| `practice01_greeting.py` に `print("Hello2")` を足す | `Hello` と `Hello2` の2行が出る（インポートしたとき、ファイルが上から順に全部実行される） |
+| `import practice01_greeting` を2行書く | `Hello` は1回だけ表示される。2回目以降のインポートでは、実行されない |
+| `import` の前に `print("start")` を書く | `start` → `Hello` の順に表示される（`import` の行で、`Hello` が出る） |
+
 ### ユーザー定義関数も即実行される
 
 サンプル: [example/ex02/greeting2.py](example/ex02/greeting2.py) / [example/ex02/result2.py](example/ex02/result2.py)
@@ -175,6 +213,14 @@ print("A")
 ```
 
 </details>
+
+練習: [example/ex02/practice02_result.py](example/ex02/practice02_result.py)（`practice02_greeting.py` と `practice02_result.py` の2つに書く）
+
+| 変えるもの | 確認すること |
+| --- | --- |
+| `practice02_greeting.py` の最後の `greeting()` の行を消す | `A` だけが表示される（関数を定義しただけでは、実行されない） |
+| `import` の下に `practice02_greeting.greeting()` を書く | `hello` が2回表示される（インポートしたときと、自分で呼んだとき） |
+| `print("A")` を `import` の上に移す | `A` → `hello` の順に表示される |
 
 ### インポートしていない関数は呼び出せない
 
@@ -203,6 +249,15 @@ print("B")
 ```
 
 </details>
+
+練習: [example/ex03/practice03_result.py](example/ex03/practice03_result.py)（`practice03_greeting.py` と `practice03_result.py` の2つに書く）
+
+| 変えるもの | 確認すること |
+| --- | --- |
+| `greetingA()` の下に `greetingB()` を書く | `NameError: name 'greetingB' is not defined`。`greetingA` だけをインポートしたので、`greetingB` は使えない |
+| `greetingA, greetingB` の2つをインポートして、`greetingB()` を呼ぶ | `hello` と `good morning` が表示される |
+| `import practice03_greeting` にして、`practice03_greeting.greetingA()` で呼ぶ | `hello` が表示される。モジュール全体をインポートしたときは、`モジュール名.関数名` で呼ぶ |
+| `import practice03_greeting` にして、`greetingA()` と書く | `NameError: name 'greetingA' is not defined`。モジュール名を付けないと、見つからない |
 
 ## モジュール分割
 
@@ -237,6 +292,16 @@ for score in scorelist:
 
 </details>
 
+練習: [example/ex04/practice04_testlist.py](example/ex04/practice04_testlist.py)（`practice04_mycalc.py` と `practice04_testlist.py` の2つに書く）
+
+| 変えるもの | 確認すること |
+| --- | --- |
+| `scorelist` に `90` と `89` を足す | `90` は `S`、`89` は `A` と表示される（境界の値） |
+| `mycalc` の `score >= 90` → `score > 90` | `90` 点が `A` に変わる。切り出したモジュールを直すと、使っている側の結果も変わる |
+| `from practice04_mycalc import gap` にして、`gap(score)` で呼ぶ | 同じ結果が出る。`モジュール名.` を付けずに呼べる |
+| `import practice04_mycalc as mc` にして、`mc.gap(score)` で呼ぶ | 同じ結果が出る。`mc` という別名で呼べる |
+| `import practice04_mycalc` のまま、`gap(score)` と書く | `NameError: name 'gap' is not defined`。モジュール名を付けないと、見つからない |
+
 ## Q3. 単位変換モジュール
 
 > 問題: [question/question3.py](question/question3.py) / 解答: [question/answer/answer3/](question/answer/answer3/)
@@ -270,6 +335,14 @@ import hello  # say_hello() は呼ばれない（インポートしただけ）
 ```
 
 </details>
+
+練習: [example/ex06/practice06_import_hello.py](example/ex06/practice06_import_hello.py)（`practice06_hello.py` と `practice06_import_hello.py` の2つに書く。`practice06_hello.py` を直接実行すると `Hello!` が出る）
+
+| 変えるもの | 確認すること |
+| --- | --- |
+| `if __name__ == "__main__":` をやめて、`say_hello()` だけにする | 直接実行しても、`import` しても、どちらでも `Hello!` が表示される（インポートしただけで実行されてしまう） |
+| `practice06_hello.py` に `print(__name__)` を書く | 直接実行すると `__main__`、インポートすると `practice06_hello` と表示される |
+| `practice06_import_hello.py` に `practice06_hello.say_hello()` を書く | `Hello!` が表示される。インポートしたあとで、自分で呼べば動く |
 
 ---
 
@@ -337,6 +410,15 @@ from calculation.subtraction import sub
 sub(2, 1)
 ```
 
+練習: [example/ex05/practice05_import.py](example/ex05/practice05_import.py)（`practice_calculation/` の3つのファイルと `practice05_import.py` に書く）
+
+| 変えるもの | 確認すること |
+| --- | --- |
+| `__init__.py` の中身を全部消して、`from practice_calculation import add, sub` を実行する | `ImportError: cannot import name 'add' from 'practice_calculation'`。`__init__.py` で `add` を用意していないので、取り出せない |
+| `__init__.py` を空にして、`from practice_calculation.addition import add` に変える | 動く（`3` が表示される）。モジュールを指定すれば、`__init__.py` が空でもインポートできる |
+| `__init__.py` の `from .addition import add` → `from addition import add`（`.` を消す） | `ModuleNotFoundError: No module named 'addition'`。`.` が無いと、同じパッケージの中を探さない |
+| `__init__.py` を別の名前に変える | `ImportError: cannot import name 'add' from 'practice_calculation' (unknown location)`。パッケージの目印がなくなる |
+
 ## Q4. 図形パッケージ
 
 > 問題: [question/question4.py](question/question4.py) / 解答: [question/answer/answer4/](question/answer/answer4/)
@@ -367,7 +449,7 @@ print(dir())   # ['greet', 'x', ...] のように表示される
 
 このコースで作るゲームも、ここまで学んだモジュール分割・パッケージの考え方で構成されている
 
-例: [25_Tetris/Tetris/](../25_Tetris/Tetris/)
+例: テトリスのゲームのフォルダ構成
 
 ```
 Tetris/

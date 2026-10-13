@@ -3,7 +3,6 @@
 ```
 
 # 目次
-- [目次](#目次)
 - [クラスとは](#クラスとは)
 - [クラスの定義](#クラスの定義)
   - [属性の種類: インスタンス変数とクラス変数](#属性の種類-インスタンス変数とクラス変数)
@@ -74,8 +73,6 @@ class クラス名():
 | `__init__` | インスタンスが作られるときに自動で呼ばれる（初期化処理） |
 | `self` | そのインスタンス自身を指す。メソッドの第1引数に必ず書く |
 | `self.属性名` | インスタンスごとに独立したデータを保持する（インスタンス変数） |
-
-サンプル: [example/ex01.py](example/ex01.py)
 
 <details>
 <summary>コードを見る</summary>
@@ -149,6 +146,19 @@ player.take_damage(20)
 player.show_status()  # 勇者 HP: 50
 ```
 
+サンプル: [example/ex01.py](example/ex01.py)
+
+練習: [practice/practice01.py](practice/practice01.py)（「# ★」の部分が空欄になっているので、サンプルを見ながら自分の手でコードを打ち込んで完成させよう。ウィンドウは開かず、ターミナルに結果が表示される）
+
+動いたら、書き換えてもう一度動かし、変化を確認する。
+
+| 変えるもの | 確認すること |
+| --- | --- |
+| `Player("勇者", 100)` → `Player("魔法使い", 80)` | 名前と HP が、渡した値に変わる（`魔法使い HP: 80` → `50` → `30`） |
+| `take_damage(30)` → `take_damage(120)` | HP が `-20` になる。`0` で止まる処理は書いていないので、マイナスになる |
+| `show_status` の `self.name` → `name` | `NameError: name 'name' is not defined`。メソッドの中でインスタンスの属性を使うには `self.` が必要 |
+| `take_damage(30)` → `take_damage()` | `TypeError: ... missing 1 required positional argument: 'amount'`。`self` は自動で渡されるが、`amount` は自分で渡す必要がある |
+
 ## Q1. カウンタークラス
 
 > 問題: [question/question1.py](question/question1.py) / 解答: [question/answer/answer1.py](question/answer/answer1.py)
@@ -181,6 +191,15 @@ for p in party:
 ```
 
 サンプル: [example/ex02.py](example/ex02.py)
+
+練習: [practice/practice02.py](practice/practice02.py)
+
+| 変えるもの | 確認すること |
+| --- | --- |
+| `p1.take_damage(30)` → `p2.take_damage(30)` | 魔法使いの HP だけが `50` になり、勇者は `100` のまま |
+| `party` に `Player("僧侶", 60)` を足す | 最後の表示が4行になる（僧侶は `HP: 50`） |
+| `take_damage(10)` → `take_damage(50)` | 全員に50ダメージ（勇者 `50`、魔法使い `30`、戦士 `70`） |
+| `p2 = Player("魔法使い", 80)` → `p2 = p1` | `p1` と `p2` が同じインスタンスを指すので、`p1` へのダメージが `p2` にも反映され、どちらも `勇者 HP: 70` と表示される |
 
 ## Q2. キャラクタークラス
 
@@ -234,6 +253,15 @@ for a in animals:
 ```
 
 サンプル: [example/ex03.py](example/ex03.py)
+
+練習: [practice/practice03.py](practice/practice03.py)
+
+| 変えるもの | 確認すること |
+| --- | --- |
+| `Cat` の `speak` を消す（`pass` にする） | クロとミケは親の `speak` が使われ、`クロ: ...` と表示される |
+| `Dog` の `speak` を消す | シロとハチは `...` になる。`GuideDog` も `Dog` を継承しているので、`アポロ: ...` になる |
+| `GuideDog` の `super().__init__(name)` を消す | `AttributeError: 'GuideDog' object has no attribute 'name'`。親の `__init__` が呼ばれないので、`self.name` が作られない |
+| `Bird(Animal)`（`speak` は `ピヨ！`）を作り、`animals` に `Bird("ピー")` を足す | 最後に `ピー: ピヨ！` が表示される。リストに足すだけで、同じ `speak()` の呼び出しで動く |
 
 ## Q3. 敵クラスを継承で作る
 

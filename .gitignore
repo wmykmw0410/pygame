@@ -66,3 +66,8 @@ Thumbs.db
 Thumbs.db
 ehthumbs.db
 EOF
+# Claude Code
+.claude/
+CLAUDE.md
+CURRICULUM_SCOPE.md
+bk/

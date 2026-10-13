@@ -96,7 +96,32 @@ func_name(arg1, arg2, ...)
 | キーワード専用引数 | `def func(*, a)` | `*` より後はキーワード指定のみ | `func(a=1)` |
 | 位置専用引数 | `def func(a, /)` | `/` より前は位置引数のみ | `func(1)` |
 
-> サンプル: [example/ex01.py](example/ex01.py)（位置引数・キーワード引数） / [example/ex02.py](example/ex02.py)（デフォルト引数）
+サンプル: [example/ex01.py](example/ex01.py)（位置引数・キーワード引数）
+
+このレッスンのサンプルは、ウィンドウを開かず、結果をターミナルに表示する。リポジトリのルートで `python 06_function/example/ex01.py` のように実行する（実行のしかたは [03_linux_command](../03_linux_command/README.md)）。
+
+練習: [practice/practice01.py](practice/practice01.py)（「# ★」の部分が空欄になっているので、サンプルを見ながら自分の手でコードを打ち込んで完成させよう）
+
+動いたら、書き換えてもう一度動かし、変化を確認する。実行する前に、結果を予想してみるとよい。
+
+| 試すこと | 確認すること |
+| --- | --- |
+| `add(10, 5)` / `add("a", "b")` | `15` / `ab`（文字列の `+` は、つなげる） |
+| `add(1)` | `TypeError`（`missing 1 required positional argument: 'b'`）。引数が足りない |
+| `add(1, 2, 3)` | `TypeError`（`takes 2 positional arguments but 3 were given`）。引数が多すぎる |
+| `a - b` にして `add(10, 3)` / `add(b=3, a=10)` / `add(3, 10)` | `7` / `7` / `-7`。キーワード指定なら順番を変えても同じ結果、位置指定は順番で結果が変わる |
+| `add(1, a=1)` | `TypeError`（`got multiple values for argument 'a'`）。同じ引数を位置とキーワードの両方で渡している |
+
+サンプル: [example/ex02.py](example/ex02.py)（デフォルト引数）
+
+練習: [practice/practice02.py](practice/practice02.py)
+
+| 試すこと | 確認すること |
+| --- | --- |
+| `add1(5)` / `add1(b=5)` | `7` / `6`。位置引数は左の `a` から順に入り、キーワード指定なら指定した引数に入る |
+| `add2` のデフォルト値 `2` → `10`、`add2(3)` | `13`。デフォルト値を変えると、省略したときの値が変わる |
+| `add2()` | `TypeError`（`missing 1 required positional argument: 'a'`）。デフォルト値のない引数は省略できない |
+| `def add(a=1, b):` | `SyntaxError`（`non-default argument follows default argument`）。デフォルト値のない引数を、右側に置けない。この1行があるとファイル全体が実行できない |
 
 > 問題: デフォルト引数 → [question/question1.py](question/question1.py) / 解答: [question/answer/answer1.py](question/answer/answer1.py)
 
@@ -241,7 +266,15 @@ greet()
 # print(name)  # エラー！関数の外からはアクセスできない
 ```
 
-> サンプル: [example/ex03.py](example/ex03.py)
+サンプル: [example/ex03.py](example/ex03.py)
+
+練習: [practice/practice03.py](practice/practice03.py)
+
+| 試すこと | 確認すること |
+| --- | --- |
+| 関数の外で `print(name)` | `NameError`（`name 'name' is not defined`）。関数の中の `name` は、外からは見えない |
+| 関数の外に `name = "Bob"` を作り、最後に `print(name)` | 関数の中は `Alice`、外は `Bob`。同じ名前でも、別の変数として扱われる |
+| 関数の中の `"Alice"` を別の名前に変える | 関数の外の `name`（`Bob`）は変わらない |
 
 ## グローバル変数（global variable）
 ```python
@@ -253,7 +286,14 @@ def greet():
 greet()  # 出力: こんにちは
 ```
 
-> サンプル: [example/ex04.py](example/ex04.py)
+サンプル: [example/ex04.py](example/ex04.py)
+
+練習: [practice/practice04.py](practice/practice04.py)
+
+| 試すこと | 確認すること |
+| --- | --- |
+| 関数の定義のあと、呼び出す前に `message = "こんばんは"` | `こんばんは` が表示される。関数が呼ばれた時点の値を使う |
+| 関数の中に `message = "やあ"` を足して、外でも `print(message)` | 関数の中は `やあ`、外は `こんにちは`。関数の中の代入は、新しいローカル変数を作る |
 
 関数の中でグローバル変数を **変更** するには `global` 宣言が必要
 
@@ -268,7 +308,15 @@ increment()
 print(count)  # 出力: 1
 ```
 
-> サンプル: [example/ex05.py](example/ex05.py)
+サンプル: [example/ex05.py](example/ex05.py)
+
+練習: [practice/practice05.py](practice/practice05.py)
+
+| 試すこと | 確認すること |
+| --- | --- |
+| `increment()` を3回呼ぶ | `count` は `3` になる |
+| `global count` の行を消して呼ぶ | `UnboundLocalError` になる（外の `count` ではなく、ローカル変数として扱われるため） |
+| 関数の中で `print(count)` だけにする | `global` なしで、外の `count` の値を表示できる（参照するだけなら `global` は不要） |
 
 > 問題: global宣言 → [question/question7.py](question/question7.py) / 解答: [question/answer/answer7.py](question/answer/answer7.py)
 
