@@ -11,9 +11,11 @@
 ## 進捗
 
 ### 準備
+
 - [ ] 00_setup — 環境構築
 
 ### pygame 入門
+
 - [ ] 01_window — ウィンドウ作成・ゲームループ
   - [ ] ex01
 - [ ] 02_draw_shapes — 図形・テキスト描画・アニメーション
@@ -42,6 +44,7 @@
 - [ ] 08_pathlib_module — pathlib によるパス管理
 
 ### ゲーム制作
+
 - [ ] 09_actiongame — アクションゲーム
   - [ ] ex01
   - [ ] ex02
@@ -52,7 +55,7 @@
   - [ ] ex07
 - [ ] 10_exception — 例外処理
 - [ ] 11_multidimensional_list — リスト・タプル・辞書・二次元リスト
-- [ ] 12_TicTocToe — マルバツゲーム（CLI → pygame）
+- [ ] 12_TicTacToe — マルバツゲーム（CLI → pygame）
   - [ ] CLI版
   - [ ] pygame版
 - [ ] 13_BreakoutClone — ブロック崩し
@@ -67,6 +70,7 @@
   - [ ] ex05
 
 ### Python 応用
+
 - [ ] 15_class — オブジェクト指向（基礎）
   - [ ] ex01
   - [ ] ex02
@@ -133,7 +137,7 @@
 | 09_actiongame | アクションゲーム | 移動・衝突判定・ゲームオーバー・ゲームクリア | [README](09_actiongame/README.md) |
 | 10_exception | 例外処理 | try/except、エラーの種類、random モジュール | [README](10_exception/README.md) |
 | 11_multidimensional_list | 多次元リスト | リスト・タプル・辞書・二次元リスト・マトリクス表 | [README](11_multidimensional_list/README.md) |
-| 12_TicTocToe | マルバツゲーム | CLI 版からの設計、pygame への移植 | [README](12_TicTocToe/README.md) |
+| 12_TicTacToe | マルバツゲーム | CLI 版からの設計、pygame への移植 | [README](12_TicTacToe/README.md) |
 | 13_BreakoutClone | ブロック崩し | バー・ボール・ブロック管理、衝突・スコア | [README](13_BreakoutClone/README.md) |
 | 14_shooting_game | シューティング | 自機・弾・UFO・スコア、ゲームオーバー | [README](14_shooting_game/README.md) |
 

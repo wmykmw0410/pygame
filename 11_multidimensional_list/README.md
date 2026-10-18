@@ -3,6 +3,7 @@
 ```
 
 # 目次
+
 - [データ構造の比較](#データ構造の比較)
   - [ミュータブル / イミュータブル](#ミュータブル--イミュータブル)
   - [イテラブル（iterable）](#イテラブルiterable)
@@ -481,4 +482,4 @@ for i in range(len(matrix)):
 
 > 問題: [question/question13.py](question/question13.py) / 解答: [question/answer/answer13.py](question/answer/answer13.py)
 
-> 問題（応用）: [12_TicTocToe/example/TicTocToe.py](../12_TicTocToe/example/TicTocToe.py)
+> 問題（応用）: [12_TicTacToe/example/TicTacToe.py](../12_TicTacToe/example/TicTacToe.py)
