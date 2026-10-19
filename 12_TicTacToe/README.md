@@ -4,6 +4,7 @@
 ```
 
 # 目次
+
 - [ゲームの仕様](#ゲームの仕様)
 - [CLI版](#cli版)
   - [ボードと手番を用意する](#ボードと手番を用意する)
@@ -62,7 +63,7 @@
 
 # CLI版
 
-まずはターミナル上で動く版を作る。新しい `.py` ファイルを作って、ステップごとにコードを書き足していく（完成版は [example/TicTocToe_cli.py](example/TicTocToe_cli.py)）。
+まずはターミナル上で動く版を作る。新しい `.py` ファイルを作って、ステップごとにコードを書き足していく（完成版は [example/TicTacToe_cli.py](example/TicTacToe_cli.py)）。
 
 ## ボードと手番を用意する
 
@@ -150,6 +151,7 @@ def print_board():
 </details>
 
 出力例
+
 ```
 0 0 0
 0 1 0
@@ -427,7 +429,7 @@ while True:
 ターミナルで、リポジトリのルートから実行する（自分のファイルなら、ファイル名を置き換える）。
 
 ```bash
-python 12_TicTocToe/example/TicTocToe_cli.py
+python 12_TicTacToe/example/TicTacToe_cli.py
 ```
 
 行と列を `0`〜`2` の数字で入力する。
@@ -436,7 +438,7 @@ python 12_TicTocToe/example/TicTocToe_cli.py
 
 # pygame版
 
-CLI版の仕組みをpygameに移植する。ステップごとにコードを書き足していく（完成版は [example/TicTocToe.py](example/TicTocToe.py)）。
+CLI版の仕組みをpygameに移植する。ステップごとにコードを書き足していく（完成版は [example/TicTacToe.py](example/TicTacToe.py)）。
 
 ## ウィンドウを作る
 
@@ -937,7 +939,7 @@ def check_winner():
 ターミナルで、リポジトリのルートから実行する（自分のファイルなら、ファイル名を置き換える）。
 
 ```bash
-python 12_TicTocToe/example/TicTocToe.py
+python 12_TicTacToe/example/TicTacToe.py
 ```
 
 マス目をクリックして、交互に ○ と × を置く。
